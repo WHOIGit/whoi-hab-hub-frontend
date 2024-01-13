@@ -4,6 +4,12 @@ import { createSelector } from "reselect";
 // local
 import { DATA_LAYERS } from "../../Constants";
 
+let SHOW_DATALAYERS_LIST = null;
+// eslint-disable-next-line no-undef
+if (import.meta.env.VITE_SHOW_DATALAYERS_LIST) {
+  SHOW_DATALAYERS_LIST = import.meta.env.VITE_SHOW_DATALAYERS_LIST.split(",");
+}
+
 // list of dataLayer IDs that have an available floating Legend window pane
 // need to check it against the active layers in the API results
 const legendLayerIds = [
@@ -29,7 +35,17 @@ export const fetchLayers = createAsyncThunk(
   async () => {
     const endpoint = "api/v1/core/data-layers/";
     const response = await axiosInstance.get(endpoint);
-    return response.data;
+
+    let data = response.data;
+    if (SHOW_DATALAYERS_LIST) {
+      const newData = data.filter((element) =>
+        SHOW_DATALAYERS_LIST.includes(element.id)
+      );
+      data = newData;
+      console.log(data);
+    }
+
+    return data;
   }
 );
 

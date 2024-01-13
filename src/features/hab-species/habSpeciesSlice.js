@@ -16,7 +16,6 @@ let SHOW_SPECIES_LIST = null;
 if (import.meta.env.VITE_SHOW_SPECIES_LIST) {
   SHOW_SPECIES_LIST = import.meta.env.VITE_SHOW_SPECIES_LIST.split(",");
 }
-console.log(SHOW_SPECIES_LIST);
 
 const initialState = {
   species: [],
