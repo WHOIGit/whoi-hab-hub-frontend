@@ -166,12 +166,12 @@ export default function DateControls({
   setShowDateControls,
 }) {
   const dateFilter = useSelector((state) => state.dateFilter);
-
+  console.log(dateFilter.defaultStartDate);
   const dispatch = useDispatch();
   const classes = useStyles();
 
   const [valueYearSlider, setValueYearSlider] = useState([
-    2017,
+    new Date(dateFilter.defaultStartDate).getFullYear(),
     new Date().getFullYear(),
   ]);
   const [valueMonthSlider, setValueMonthSlider] = useState([0, 11]);
