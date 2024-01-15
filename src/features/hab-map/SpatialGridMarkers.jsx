@@ -9,6 +9,12 @@ import { selectMaxMeanOption } from "../data-layers/dataLayersSlice";
 import { selectVisibleSpecies } from "../hab-species/habSpeciesSlice";
 import axiosInstance from "../../app/apiAxios";
 
+let LIMIT_DATA_START_DATE = null;
+// eslint-disable-next-line no-undef
+if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
+  LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
+}
+
 const useStyles = makeStyles(() => ({
   dotSquare: {
     width: "10px",
@@ -43,6 +49,11 @@ export default function SpatialGridMarkers({
           smoothing_factor: dateFilter.smoothingFactor,
           grid_level: gridLength,
         });
+
+        if (LIMIT_DATA_START_DATE) {
+          params.append("limit_start_date", LIMIT_DATA_START_DATE);
+        }
+
         const res = await axiosInstance.get("api/v1/ifcb-spatial-grid/", {
           params,
         });

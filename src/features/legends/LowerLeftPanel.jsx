@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     bottom: 0,
     left: 0,
-    zIndex: 2000,
+    zIndex: 1100,
   },
 }));
 

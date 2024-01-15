@@ -9,6 +9,12 @@ import axiosInstance from "../../../app/apiAxios";
 import { DATA_LAYERS } from "../../../Constants";
 import { selectDateFilter } from "../../date-filter/dateFilterSlice";
 
+let LIMIT_DATA_START_DATE = null;
+// eslint-disable-next-line no-undef
+if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
+  LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -86,6 +92,11 @@ export default function DataPanel({
           smoothing_factor: smoothingFactor,
           grid_level: gridLength,
         });
+
+        if (LIMIT_DATA_START_DATE) {
+          params.append("limit_start_date", LIMIT_DATA_START_DATE);
+        }
+
         const res = await axiosInstance.get(endpoint, {
           params,
         });

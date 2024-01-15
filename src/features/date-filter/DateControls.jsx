@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: theme.spacing(0),
     height: "400px",
-    zIndex: 3000,
+    zIndex: 1200,
     transition: "all 0.4s",
   },
   dashBoardWidthPanel: {
@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
   popper: {
-    zIndex: 9999,
+    zIndex: 999999,
   },
 }));
 
@@ -349,6 +349,7 @@ export default function DateControls({
                             KeyboardButtonProps={{
                               "aria-label": "start date",
                             }}
+                            className={classes.popper}
                           />
                         </FormGroup>
                         <FormGroup>
@@ -364,6 +365,7 @@ export default function DateControls({
                             KeyboardButtonProps={{
                               "aria-label": "end date",
                             }}
+                            className={classes.popper}
                           />
                         </FormGroup>
                       </FormControl>

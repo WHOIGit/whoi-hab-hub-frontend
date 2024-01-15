@@ -16,7 +16,7 @@ export default function LegendPane({ dataLayer, left, bottom, id }) {
       margin: theme.spacing(1),
       width: 300,
       transition: "all 0.3s",
-      zIndex: 2000,
+      zIndex: 1100,
       position: "absolute",
       left: left,
       bottom: bottom,

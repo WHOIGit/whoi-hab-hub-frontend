@@ -14,27 +14,39 @@ const widthWithDashboard = window.outerWidth - 400;
 const widthFull = window.outerWidth - 116;
 const bandColor = "#e1f5fe";
 
-const useStyles = makeStyles(theme => ({
+let SHOW_DATALAYERS_LIST = null;
+// eslint-disable-next-line no-undef
+if (import.meta.env.VITE_SHOW_DATALAYERS_LIST) {
+  SHOW_DATALAYERS_LIST = import.meta.env.VITE_SHOW_DATALAYERS_LIST.split(",");
+}
+
+let LIMIT_DATA_START_DATE = null;
+// eslint-disable-next-line no-undef
+if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
+  LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
+}
+
+const useStyles = makeStyles((theme) => ({
   root: {
     position: "relative",
     display: "flex",
     margin: theme.spacing(0),
     alignItems: "center",
     padding: theme.spacing(0),
-    transition: "all 0.3s"
+    transition: "all 0.3s",
   },
   placeholder: {
-    margin: "0 auto"
+    margin: "0 auto",
   },
   button: {
     margin: theme.spacing(0),
     position: "absolute",
     top: 0,
-    left: 0
+    left: 0,
   },
   collapse: {
-    bottom: "-320px"
-  }
+    bottom: "-320px",
+  },
 }));
 
 function DataTimeline({
@@ -44,10 +56,10 @@ function DataTimeline({
   setSliderValuesFromDates,
   showControls,
   chartZoomReset,
-  setChartZoomReset
+  setChartZoomReset,
 }) {
-  const dataLayers = useSelector(state => state.dataLayers.layers);
-  const dateFilter = useSelector(state => state.dateFilter);
+  const dataLayers = useSelector((state) => state.dataLayers.layers);
+  const dateFilter = useSelector((state) => state.dateFilter);
   const dispatch = useDispatch();
   const chartRef = useRef();
 
@@ -63,7 +75,17 @@ function DataTimeline({
   useEffect(() => {
     async function fetchResults() {
       try {
-        const res = await axiosInstance.get("api/v1/core/data-density/");
+        let params = new URLSearchParams();
+        if (SHOW_DATALAYERS_LIST) {
+          params.append("data_layers", SHOW_DATALAYERS_LIST);
+        }
+        if (LIMIT_DATA_START_DATE) {
+          params.append("limit_start_date", LIMIT_DATA_START_DATE);
+        }
+
+        const res = await axiosInstance.get("api/v1/core/data-density/", {
+          params,
+        });
         console.log(res.request.responseURL);
         setIsLoaded(true);
         setResults(res.data);
@@ -79,14 +101,14 @@ function DataTimeline({
     const newChartData = [];
     if (results) {
       for (let [key, value] of Object.entries(results)) {
-        const dataArray = value.map(item => [
+        const dataArray = value.map((item) => [
           Date.parse(item.timestamp),
-          parseFloat(item.densityPercentage)
+          parseFloat(item.densityPercentage),
         ]);
 
         const timeSeries = {
           name: key,
-          data: dataArray
+          data: dataArray,
         };
 
         newChartData.push(timeSeries);
@@ -106,28 +128,28 @@ function DataTimeline({
           filterStartDate.getFullYear(),
           filterEndDate.getFullYear()
         );
-        const newChartBands = yearRange.map(year => {
+        const newChartBands = yearRange.map((year) => {
           let startDateFields = [
             year,
             filterStartDate.getMonth(),
-            filterStartDate.getDate()
+            filterStartDate.getDate(),
           ];
           let endDateFields = [
             year,
             filterEndDate.getMonth(),
-            filterEndDate.getDate()
+            filterEndDate.getDate(),
           ];
 
           if (dateFilter.excludeMonthRange) {
             startDateFields = [
               year,
               filterEndDate.getMonth(),
-              filterEndDate.getDate()
+              filterEndDate.getDate(),
             ];
             endDateFields = [
               year + 1,
               filterStartDate.getMonth(),
-              filterStartDate.getDate()
+              filterStartDate.getDate(),
             ];
           }
 
@@ -137,7 +159,7 @@ function DataTimeline({
           return {
             color: bandColor,
             from: startDate,
-            to: endDate
+            to: endDate,
           };
         });
         setChartBands(newChartBands);
@@ -145,7 +167,7 @@ function DataTimeline({
         const band = {
           color: bandColor,
           from: filterStartDate,
-          to: filterEndDate
+          to: filterEndDate,
         };
         setChartBands([band]);
       }
@@ -176,7 +198,7 @@ function DataTimeline({
       height: 220,
       // update dateFilter state on zoom selection, then set all date controls to match
       events: {
-        selection: function(event) {
+        selection: function (event) {
           if (event.xAxis != null) {
             let start = new Date(Math.ceil(event.xAxis[0].min));
             let end = new Date(Math.floor(event.xAxis[0].max));
@@ -185,7 +207,7 @@ function DataTimeline({
               startDate: start.toISOString(),
               endDate: end.toISOString(),
               seasonal: dateFilter.seasonal,
-              excludeMonthRange: dateFilter.excludeMonthRange
+              excludeMonthRange: dateFilter.excludeMonthRange,
             };
             dispatch(changeDateRange(payload));
 
@@ -196,36 +218,36 @@ function DataTimeline({
           } else {
             onDateRangeReset();
           }
-        }
-      }
+        },
+      },
     },
     title: {
-      text: null
+      text: null,
     },
     subtitle: {
       text:
         document.ontouchstart === undefined
           ? "Click and drag in the plot area to select date range"
-          : "Pinch the chart to select data range"
+          : "Pinch the chart to select data range",
     },
     xAxis: {
       type: "datetime",
-      plotBands: chartBands
+      plotBands: chartBands,
     },
     yAxis: {
       title: {
-        text: "Data Density"
+        text: "Data Density",
       },
       min: 0,
-      max: 1
+      max: 1,
     },
     plotOptions: {
       series: {
         label: {
-          enabled: false
-        }
+          enabled: false,
+        },
         //enableMouseTracking : false,
-      }
+      },
     },
     tooltip: { enabled: false },
     /*
@@ -240,7 +262,7 @@ function DataTimeline({
       }
     },
     */
-    series: chartData
+    series: chartData,
   };
 
   return (

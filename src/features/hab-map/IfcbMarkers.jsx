@@ -15,6 +15,12 @@ import { selectVisibleSpecies } from "../hab-species/habSpeciesSlice";
 import { selectActiveGuideStep } from "../guide/guideSlice";
 import { DATA_LAYERS } from "../../Constants";
 
+let LIMIT_DATA_START_DATE = null;
+// eslint-disable-next-line no-undef
+if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
+  LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
+}
+
 // eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles((theme) => ({
   placeholder: {
@@ -76,6 +82,11 @@ export default function IfcbMarkers({
           smoothing_factor: dateFilter.smoothingFactor,
           fixed_locations: true,
         });
+
+        if (LIMIT_DATA_START_DATE) {
+          params.append("limit_start_date", LIMIT_DATA_START_DATE);
+        }
+
         const res = await axiosInstance.get("api/v1/ifcb-datasets/", {
           params,
         });
