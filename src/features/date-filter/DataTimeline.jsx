@@ -126,7 +126,7 @@ function DataTimeline({
       if (dateFilter.seasonal) {
         const yearRange = _.range(
           filterStartDate.getFullYear(),
-          filterEndDate.getFullYear()
+          filterEndDate.getFullYear() + 1
         );
         const newChartBands = yearRange.map((year) => {
           let startDateFields = [
