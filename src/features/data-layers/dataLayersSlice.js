@@ -4,6 +4,12 @@ import { createSelector } from "reselect";
 // local
 import { DATA_LAYERS } from "../../Constants";
 
+let INITIAL_MAX_MEAN = "mean";
+// eslint-disable-next-line no-undef
+if (import.meta.env.VITE_INITIAL_MAX_MEAN) {
+  INITIAL_MAX_MEAN = import.meta.env.VITE_INITIAL_MAX_MEAN;
+}
+
 let SHOW_DATALAYERS_LIST = null;
 // eslint-disable-next-line no-undef
 if (import.meta.env.VITE_SHOW_DATALAYERS_LIST) {
@@ -24,7 +30,7 @@ const interactiveLayerIds = [
 
 const initialState = {
   layers: [],
-  showMaxMean: "mean",
+  showMaxMean: INITIAL_MAX_MEAN,
   status: "idle",
   error: null,
 };
