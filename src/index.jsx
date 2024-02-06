@@ -19,7 +19,7 @@ store.dispatch(fetchBoundingBox());
 // Google Analytics setup
 let GA_UID = null;
 if (import.meta.env.VITE_GA_UID) {
-  //GA_UID = process.env.REACT_APP_GA_UID;
+  GA_UID = import.meta.env.VITE_GA_UID;
 }
 const ga4react = new GA4React(GA_UID);
 
