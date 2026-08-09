@@ -5,6 +5,7 @@ import GA4React from "ga-4-react";
 import App from "./app/App";
 import Home from "./routes/home";
 import Bookmark from "./routes/bookmark";
+import Gb2006Page from "./routes/gb2026";
 // Redux
 import store from "./app/store";
 import { Provider } from "react-redux";
@@ -37,6 +38,7 @@ const ga4react = new GA4React(GA_UID);
               <Route path="bookmark" element={<Bookmark />}>
                 <Route path=":bookmarkId" element={<Bookmark />} />
               </Route>
+              <Route path="gb2026" element={<Gb2006Page />}></Route>
             </Route>
           </Routes>
         </BrowserRouter>
