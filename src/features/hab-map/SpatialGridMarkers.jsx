@@ -69,6 +69,7 @@ export default function SpatialGridMarkers({
   }, [dateFilter, gridLength]);
 
   function renderIconGrid(feature, showMaxMean) {
+    // console.log(feature)
     // create new Array with Visible Species/Values
     if (!feature.properties.maxMeanValues.length) {
       return null;
