@@ -128,6 +128,8 @@ export default function Dashboard({
                 value={tabValue}
                 onChange={handleTabChange}
                 orientation="vertical"
+                textColor="inherit"
+                indicatorColor="secondary"
                 sx={{ "& .MuiTabs-indicator": { left: "0px" } }}
               >
                 <Tab

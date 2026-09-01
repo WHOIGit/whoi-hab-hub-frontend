@@ -15,14 +15,17 @@ export default function SpeciesColorSwatch({ value, onChange }) {
         onClick={(event) => setAnchorEl(event.currentTarget)}
         aria-label="pick color"
         sx={{
-          width: 20,
-          height: 20,
-          border: "1px solid rgba(0, 0, 0, 0.23)",
-          borderRadius: "2px",
+          width: 24,
+          height: 24,
+          border: "none",
+          borderRadius: "4px",
           backgroundColor: value,
           cursor: "pointer",
           padding: 0,
+          margin: "0 6px",
           verticalAlign: "middle",
+          boxShadow:
+            "rgba(50, 50, 93, 0.11) 0px 4px 6px 0px, rgba(0, 0, 0, 0.08) 0px 1px 3px 0px",
         }}
       />
       <Popover
@@ -42,10 +45,10 @@ export default function SpeciesColorSwatch({ value, onChange }) {
                 onClick={() => onChange(color)}
                 aria-label={name}
                 sx={{
-                  width: 18,
-                  height: 18,
+                  width: 20,
+                  height: 20,
                   border: "1px solid rgba(0, 0, 0, 0.23)",
-                  borderRadius: "2px",
+                  borderRadius: "4px",
                   backgroundColor: color,
                   cursor: "pointer",
                   padding: 0,
