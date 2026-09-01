@@ -1,31 +1,16 @@
 import React from "react";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import { makeStyles } from "@material-ui/core/styles";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepButton from "@material-ui/core/StepButton";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepButton from "@mui/material/StepButton";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 // local imports
 import { changeActiveGuideStep } from "./guideSlice";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  backButton: {
-    marginRight: theme.spacing(1),
-  },
-  instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-}));
-
 export default function GuideDialog() {
-  const classes = useStyles();
   // eslint-disable-next-line no-unused-vars
   const dispatch = useDispatch();
   const guideSteps = useSelector((state) => state.guide.guideSteps);
@@ -89,7 +74,7 @@ export default function GuideDialog() {
     <div>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <div className={classes.root}>
+          <div style={{ width: "100%" }}>
             <Stepper nonLinear activeStep={activeStep} alternativeLabel>
               {guideSteps.map((step) => (
                 <Step key={step.stepId}>
@@ -104,11 +89,11 @@ export default function GuideDialog() {
             </Stepper>
             <div>
               <div>
-                <Typography className={classes.instructions}>
+                <Typography sx={{ mt: 1, mb: 1 }}>
                   <div dangerouslySetInnerHTML={getStepContent(activeStep)} />;
                 </Typography>
                 <div>
-                  <Button onClick={handleBack} className={classes.backButton}>
+                  <Button onClick={handleBack} sx={{ mr: 1 }}>
                     Back
                   </Button>
                   <Button

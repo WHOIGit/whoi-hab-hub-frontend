@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/styles";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Box } from "@mui/material";
 import { format, parseISO } from "date-fns";
 // local
 import SidePane from "./SidePane";
@@ -14,21 +13,6 @@ let LIMIT_DATA_START_DATE = null;
 if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
   LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    margin: theme.spacing(1),
-    width: 600,
-    height: 300,
-    backgroundColor: "white",
-    alignItems: "center",
-    padding: theme.spacing(2),
-  },
-  placeholder: {
-    margin: "0 auto",
-  },
-}));
 
 export default function DataPanel({
   featureID,
@@ -45,7 +29,6 @@ export default function DataPanel({
   const [isLoaded, setIsLoaded] = useState(false);
   const [results, setResults] = useState();
   const [hasData, setHasData] = useState(true);
-  const classes = useStyles();
 
   useEffect(() => {
     // Need to check different properties to see whether the API result has data for time frame
@@ -115,11 +98,21 @@ export default function DataPanel({
   return (
     <div>
       {!isLoaded && (
-        <div className={classes.root}>
-          <div className={classes.placeholder}>
+        <Box
+          sx={{
+            display: "flex",
+            margin: 1,
+            width: 600,
+            height: 300,
+            backgroundColor: "white",
+            alignItems: "center",
+            padding: 2,
+          }}
+        >
+          <Box sx={{ margin: "0 auto" }}>
             <CircularProgress />
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {results && hasData && (

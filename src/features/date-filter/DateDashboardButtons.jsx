@@ -1,33 +1,21 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Button } from "@material-ui/core";
+import { Box, Button, styled } from "@mui/material";
 import { useSelector } from "react-redux";
-//import ScheduleIcon from "@material-ui/icons/Schedule";
-import MyLocationIcon from "@material-ui/icons/MyLocation";
-import TuneIcon from "@material-ui/icons/Tune";
-import { makeStyles } from "@material-ui/styles";
+//import ScheduleIcon from "@mui/icons-material/Schedule";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import TuneIcon from "@mui/icons-material/Tune";
 import { sub } from "date-fns";
 import { changeDateRange } from "./dateFilterSlice";
 import { selectActiveGuideStep } from "../guide/guideSlice";
 import styles from "../guide/styles.module.css";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    position: "absolute",
-    right: 0,
-    bottom: theme.spacing(1),
-    zIndex: 2000,
-    width: "130px",
-  },
-  dashboardButton: {
-    color: "white",
-    width: "100%",
-    marginBottom: theme.spacing(1),
-  },
-  dashboardButtonLabel: {
-    // Aligns the content of the button vertically.
-    flexDirection: "column",
-  },
+const DashboardButton = styled(Button)(({ theme }) => ({
+  color: "white",
+  width: "100%",
+  marginBottom: theme.spacing(1),
+  // Aligns the content of the button vertically.
+  flexDirection: "column",
 }));
 
 export default function DateDashboardButtons({
@@ -39,7 +27,6 @@ export default function DateDashboardButtons({
   setChartZoomReset,
 }) {
   const dispatch = useDispatch();
-  const classes = useStyles();
   const activeGuideStep = useSelector(selectActiveGuideStep);
 
   useEffect(() => {
@@ -69,30 +56,30 @@ export default function DateDashboardButtons({
   };
 
   return (
-    <div className={classes.root}>
-      <Button
+    <Box
+      sx={{
+        position: "absolute",
+        right: 0,
+        bottom: (theme) => theme.spacing(1),
+        zIndex: 2000,
+        width: "130px",
+      }}
+    >
+      <DashboardButton
         className={activeGuideStep?.stepId === 3 && styles.pulse}
-        classes={{
-          root: classes.dashboardButton,
-          label: classes.dashboardButtonLabel,
-        }}
         onClick={onCurrentDataClick}
       >
         <MyLocationIcon />
         Current Data
-      </Button>
+      </DashboardButton>
 
-      <Button
+      <DashboardButton
         className={activeGuideStep?.stepId === 3 && styles.pulse}
-        classes={{
-          root: classes.dashboardButton,
-          label: classes.dashboardButtonLabel,
-        }}
         onClick={() => setShowDateControls(!showDateControls)}
       >
         <TuneIcon />
         Date Controls
-      </Button>
-    </div>
+      </DashboardButton>
+    </Box>
   );
 }

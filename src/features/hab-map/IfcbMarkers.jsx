@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/maplibre";
 import { format, parseISO } from "date-fns";
-import { CircularProgress } from "@material-ui/core";
+import { Box, CircularProgress } from "@mui/material";
 
 import IfcbMarkerTrianglesGrid from "./IfcbMarkerTrianglesGrid";
 import axiosInstance from "../../app/apiAxios";
@@ -21,25 +20,6 @@ if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
   LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
 }
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({
-  placeholder: {
-    position: "absolute",
-    left: "50%",
-    top: "40%",
-  },
-  circleMarker: {
-    cursor: "pointer",
-    width: "22px",
-    height: "22px",
-    borderRadius: "50%",
-    borderColor: "#1976d2",
-    borderWidth: "2px",
-    borderStyle: "solid",
-    backgroundColor: "#90caf9",
-  },
-}));
-
 export default function IfcbMarkers({
   onMarkerClick,
   metricID,
@@ -52,7 +32,6 @@ export default function IfcbMarkers({
   const showMaxMean = useSelector(selectMaxMeanOption);
   const activeGuideStep = useSelector(selectActiveGuideStep);
 
-  const classes = useStyles();
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -172,10 +151,19 @@ export default function IfcbMarkers({
         offsetLeft={-10}
         captureClick={true}
       >
-        <div
-          className={classes.circleMarker}
+        <Box
           onClick={(event) => onMarkerClick(event, feature, layerID, metricID)}
-        ></div>
+          sx={{
+            cursor: "pointer",
+            width: "22px",
+            height: "22px",
+            borderRadius: "50%",
+            borderColor: "#1976d2",
+            borderWidth: "2px",
+            borderStyle: "solid",
+            backgroundColor: "#90caf9",
+          }}
+        ></Box>
       </Marker>
     );
   };
@@ -183,9 +171,9 @@ export default function IfcbMarkers({
   return (
     <div>
       {!isLoaded && (
-        <div className={classes.placeholder}>
+        <Box sx={{ position: "absolute", left: "50%", top: "40%" }}>
           <CircularProgress />
-        </div>
+        </Box>
       )}
 
       {results && (

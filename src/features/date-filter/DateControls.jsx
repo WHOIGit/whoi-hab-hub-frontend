@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import DateFnsUtils from "@date-io/date-fns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { parseISO } from "date-fns";
-import { makeStyles } from "@material-ui/styles";
 import {
   Grid,
   Box,
@@ -17,12 +16,10 @@ import {
   IconButton,
   Checkbox,
   Tooltip,
-} from "@material-ui/core";
-import { Restore } from "@material-ui/icons";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+} from "@mui/material";
+import { Restore } from "@mui/icons-material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import DataTimeline from "./DataTimeline";
 import DateDashboardButtons from "./DateDashboardButtons";
@@ -113,52 +110,33 @@ function valueMonthLabelFormat(value) {
   return value + 1;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    position: "fixed",
-    bottom: 0,
-    left: 0,
-    display: "flex",
-    margin: theme.spacing(0),
-    backgroundColor: "white",
-    alignItems: "center",
-    padding: theme.spacing(0),
-    height: "400px",
-    zIndex: 1200,
-    transition: "all 0.4s",
-  },
-  dashBoardWidthPanel: {
-    width: widthWithDashboard,
-  },
-  fullWidthPanel: {
-    width: widthFull,
-  },
-  dateRangePanel: {
-    width: "100%",
-  },
-  button: {
-    margin: theme.spacing(0),
-    position: "absolute",
-    top: "-50px",
-    left: 0,
-  },
-  resetBtn: {
-    position: "absolute",
-    top: "-3px",
-    right: "15px",
-    zIndex: 100,
-  },
-  collapse: {
-    bottom: "-500px",
-  },
-  sliderContainer: {
-    padding: "12px 16px",
-    color: theme.palette.text.secondary,
-  },
-  popper: {
-    zIndex: 999999,
-  },
-}));
+const rootSx = {
+  position: "fixed",
+  bottom: 0,
+  left: 0,
+  display: "flex",
+  margin: 0,
+  backgroundColor: "white",
+  alignItems: "center",
+  padding: 0,
+  height: "400px",
+  zIndex: 1200,
+  transition: "all 0.4s",
+};
+
+const resetBtnSx = {
+  position: "absolute",
+  top: "-3px",
+  right: "15px",
+  zIndex: 100,
+};
+
+const sliderContainerSx = {
+  padding: "12px 16px",
+  color: (theme) => theme.palette.text.secondary,
+};
+
+const popperSx = { zIndex: 999999 };
 
 export default function DateControls({
   showControls,
@@ -168,7 +146,6 @@ export default function DateControls({
   const dateFilter = useSelector((state) => state.dateFilter);
   console.log(dateFilter.defaultStartDate);
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   const [valueYearSlider, setValueYearSlider] = useState([
     new Date(dateFilter.defaultStartDate).getFullYear(),
@@ -307,29 +284,27 @@ export default function DateControls({
         setChartZoomReset={setChartZoomReset}
       />
       <div
-        className={`${classes.root} ${
-          showDateControls ? "active" : classes.collapse
-        } ${
-          showControls ? classes.dashBoardWidthPanel : classes.fullWidthPanel
-        }`}
+        style={{
+          ...rootSx,
+          bottom: showDateControls ? rootSx.bottom : "-500px",
+          width: showControls ? widthWithDashboard : widthFull,
+        }}
       >
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <Grid container spacing={1}>
               <Grid item xs={3}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <List>
                     <ListItem>
                       <Tooltip
                         title="Reset Dates"
-                        classes={{
-                          popper: classes.popper,
-                        }}
+                        slotProps={{ popper: { sx: popperSx } }}
                       >
                         <IconButton
                           onClick={() => onDateRangeReset()}
                           aria-label="expand"
-                          className={classes.resetBtn}
+                          sx={resetBtnSx}
                         >
                           <Restore />
                         </IconButton>
@@ -337,44 +312,38 @@ export default function DateControls({
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Date Range</FormLabel>
                         <FormGroup>
-                          <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
+                          <DatePicker
                             format="yyyy-MM-dd"
-                            margin="normal"
-                            id="start-date"
                             label="Start Date"
-                            value={dateFilter.startDate}
+                            value={parseISO(dateFilter.startDate)}
                             onChange={onStartDateChange}
-                            KeyboardButtonProps={{
-                              "aria-label": "start date",
+                            slotProps={{
+                              textField: { margin: "normal", id: "start-date" },
+                              openPickerButton: { "aria-label": "start date" },
+                              popper: { sx: popperSx },
                             }}
-                            className={classes.popper}
                           />
                         </FormGroup>
                         <FormGroup>
-                          <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
+                          <DatePicker
                             format="yyyy-MM-dd"
-                            margin="normal"
-                            id="end-date"
                             label="End Date"
                             value={selectedEndDate}
                             onChange={onEndDateChange}
-                            KeyboardButtonProps={{
-                              "aria-label": "end date",
+                            slotProps={{
+                              textField: { margin: "normal", id: "end-date" },
+                              openPickerButton: { "aria-label": "end date" },
+                              popper: { sx: popperSx },
                             }}
-                            className={classes.popper}
                           />
                         </FormGroup>
                       </FormControl>
                     </ListItem>
                   </List>
-                </MuiPickersUtilsProvider>
+                </LocalizationProvider>
               </Grid>
               <Grid item xs={9}>
-                <div className={classes.sliderContainer}>
+                <Box sx={sliderContainerSx}>
                   <Typography variant="body1" gutterBottom>
                     Seasonal range selectors
                   </Typography>
@@ -419,7 +388,7 @@ export default function DateControls({
                       label="Exclude selected month range"
                     />
                   </Box>
-                </div>
+                </Box>
               </Grid>
             </Grid>
           </Grid>

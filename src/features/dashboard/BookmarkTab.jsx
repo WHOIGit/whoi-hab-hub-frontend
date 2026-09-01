@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 import {
   Typography,
   List,
@@ -14,8 +15,8 @@ import {
   Tooltip,
   Checkbox,
   FormControlLabel,
-} from "@material-ui/core";
-import { Link, FileCopy } from "@material-ui/icons";
+} from "@mui/material";
+import { Link, FileCopy } from "@mui/icons-material";
 import { parseISO, format, differenceInDays } from "date-fns";
 // local imports
 import axiosInstance from "../../app/apiAxios";
@@ -26,37 +27,18 @@ import {
 } from "../data-layers/dataLayersSlice";
 import { selectActiveFeatues } from "../hab-map/habMapDataSlice";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  listItem: {
-    paddingLeft: 0,
-  },
-  blueText: {
-    color: theme.palette.primary.main,
-  },
-  divider: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-  buttonDiv: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    textAlign: "center",
-  },
-  popper: {
-    zIndex: 9999,
-  },
-  label: {
-    ...theme.typography.body2,
-  },
+const StyledListItem = styled(ListItem)({
+  paddingLeft: 0,
+});
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  marginBottom: theme.spacing(1),
 }));
 
 const defaultTooltipText = "Copy to Clipboard";
 
 export default function BookmarkTab() {
-  const classes = useStyles();
   const dateFilter = useSelector((state) => state.dateFilter);
   const visibleSpecies = useSelector(selectVisibleSpecies);
   const visibleLayers = useSelector(selectVisibleLayers);
@@ -125,7 +107,7 @@ export default function BookmarkTab() {
 
   return (
     <>
-      <div className={classes.root}>
+      <Box sx={{ p: 2 }}>
         <Typography variant="subtitle1" display="block" gutterBottom>
           Bookmark Your Map
         </Typography>
@@ -135,9 +117,9 @@ export default function BookmarkTab() {
           feature to create a unique bookmarkable link.
         </Typography>
 
-        <Divider className={classes.divider} />
+        <StyledDivider />
 
-        <div className={classes.buttonDiv}>
+        <Box sx={{ mt: 1, mb: 1, textAlign: "center" }}>
           {" "}
           <Button
             onClick={() => handleBookmarkCreate()}
@@ -147,7 +129,7 @@ export default function BookmarkTab() {
           >
             Create Link
           </Button>
-        </div>
+        </Box>
 
         {bookmarks?.length > 0 && (
           <div>
@@ -157,19 +139,21 @@ export default function BookmarkTab() {
 
             <List dense={true}>
               {bookmarks.map((item, index) => (
-                <ListItem
-                  className={classes.listItem}
+                <StyledListItem
                   key={index}
                   component="a"
                   href={item}
                   target="_blank"
                 >
-                  <ListItemText className={classes.blueText} primary={item} />
+                  <ListItemText
+                    sx={{ color: (theme) => theme.palette.primary.main }}
+                    primary={item}
+                  />
                   <ListItemSecondaryAction>
                     <Tooltip
                       title={tooltipText}
-                      classes={{
-                        popper: classes.popper,
+                      slotProps={{
+                        popper: { sx: { zIndex: 9999 } },
                       }}
                       onClose={() => setTooltipText(defaultTooltipText)}
                     >
@@ -182,16 +166,15 @@ export default function BookmarkTab() {
                       </IconButton>
                     </Tooltip>
                   </ListItemSecondaryAction>
-                </ListItem>
+                </StyledListItem>
               ))}
             </List>
           </div>
         )}
 
         <FormControlLabel
-          classes={{
-            //root: classes.checkBoxes, // class name, e.g. `classes-nesting-root-x`
-            label: classes.label,
+          slotProps={{
+            typography: { variant: "body2" },
           }}
           control={
             <Checkbox
@@ -207,33 +190,33 @@ export default function BookmarkTab() {
         />
         <Typography variant="body2" display="block"></Typography>
 
-        <Divider className={classes.divider} />
+        <StyledDivider />
 
         <Typography variant="subtitle1" display="block">
           Current Map Settings
         </Typography>
 
         <List>
-          <ListItem className={classes.listItem}>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               HAB Species:{" "}
               {visibleSpecies.map((item) => item.displayName).join(", ")}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Data Layers: {visibleLayers.map((item) => item.name).join(", ")}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Start Date:{" "}
               {useRelativeDateRange
                 ? "Today"
                 : format(parseISO(dateFilter.startDate), "yyyy-MM-dd")}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               End Date:{" "}
               {useRelativeDateRange
@@ -243,51 +226,51 @@ export default function BookmarkTab() {
                   ) + " days"
                 : format(parseISO(dateFilter.endDate), "yyyy-MM-dd")}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Use Relative Date Range: {useRelativeDateRange.toString()}
             </Typography>
-          </ListItem>
+          </StyledListItem>
 
-          <ListItem className={classes.listItem}>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Data Type:{" "}
               {showMaxMean.charAt(0).toUpperCase() + showMaxMean.slice(1)}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Seasonal: {dateFilter.seasonal.toString()}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Exclude Months: {dateFilter.excludeMonthRange.toString()}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Map Zoom: {Math.round(habMapData.zoom * 1000) / 1000}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Latitude: {Math.round(habMapData.latitude * 10000) / 10000}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Longitude: {Math.round(habMapData.longitude * 10000) / 10000}
             </Typography>
-          </ListItem>
-          <ListItem className={classes.listItem}>
+          </StyledListItem>
+          <StyledListItem>
             <Typography variant="body2" display="block">
               Show Data Charts: {showDatacharts}
             </Typography>
-          </ListItem>
+          </StyledListItem>
         </List>
-      </div>
+      </Box>
     </>
   );
 }

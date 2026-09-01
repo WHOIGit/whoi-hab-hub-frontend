@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { makeStyles } from "@material-ui/styles";
 import Highcharts from "highcharts";
 import Exporting from "highcharts/modules/exporting";
 import ExportData from "highcharts/modules/export-data";
@@ -16,18 +15,8 @@ Serieslabel(Highcharts);
 const expandWidth = window.outerWidth - 430;
 
 // eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({
-  chartContainer: {},
-  chartContainerExpand: {
-    width: expandWidth,
-    height: "100%",
-  },
-}));
-
-// eslint-disable-next-line no-unused-vars
 function StationsGraph({ results, chartExpanded, yAxisScale }) {
   const chartRef = useRef();
-  const classes = useStyles();
   const [chartOptions, setChartOptions] = useState({});
 
   useEffect(() => {
@@ -137,8 +126,8 @@ function StationsGraph({ results, chartExpanded, yAxisScale }) {
       options={chartOptions}
       containerProps={
         chartExpanded
-          ? { className: classes.chartContainerExpand }
-          : { className: classes.chartContainer }
+          ? { style: { width: expandWidth, height: "100%" } }
+          : { style: {} }
       }
       ref={chartRef}
     />

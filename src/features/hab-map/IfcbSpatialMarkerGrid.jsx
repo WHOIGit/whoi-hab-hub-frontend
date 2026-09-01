@@ -1,30 +1,7 @@
 /* eslint-disable */
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/maplibre";
 import DotMarker from "../../images/dot-grey.svg";
-
-const useStyles = makeStyles(() => ({
-  button: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-  },
-  squaresGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    alignItems: "baseline",
-  },
-  gridBreak: {
-    flexBasis: "100%",
-    height: 0,
-  },
-  dotSquare: {
-    display: "block",
-    width: "20px",
-    height: "20px",
-  },
-}));
 
 export default function IfcbSpatialMarkerGrid({
   feature,
@@ -33,7 +10,6 @@ export default function IfcbSpatialMarkerGrid({
   onMarkerClick,
   metricID,
 }) {
-  const classes = useStyles();
   // set some constants for square sizes
   const maxSquareSize = 35;
   const minSquareSize = 7;
@@ -89,7 +65,7 @@ export default function IfcbSpatialMarkerGrid({
 
     return (
       <React.Fragment key={index}>
-        <div className={classes.gridItem} style={{ height: squareSize }}>
+        <div style={{ height: squareSize }}>
           <svg viewBox="0 0 100 100" width={squareSize} height={squareSize}>
             <polygon
               points="0 0, 100 100, 0 100"
@@ -100,7 +76,9 @@ export default function IfcbSpatialMarkerGrid({
             />
           </svg>
         </div>
-        {rowEnd && <div className={classes.gridBreak}></div>}
+        {rowEnd && (
+          <div style={{ flexBasis: "100%", height: 0 }}></div>
+        )}
       </React.Fragment>
     );
     /*
@@ -137,7 +115,7 @@ export default function IfcbSpatialMarkerGrid({
         longitude={feature.geometry.coordinates[0]}
         captureClick={true}
       >
-        <div className={classes.dotSquare}>
+        <div style={{ display: "block", width: "20px", height: "20px" }}>
           <img src={DotMarker} alt="No detection marker" />
         </div>
       </Marker>
@@ -152,10 +130,12 @@ export default function IfcbSpatialMarkerGrid({
       captureClick={true}
     >
       <div
-        className={classes.button}
+        style={{ background: "none", border: "none", cursor: "pointer" }}
         onClick={(event) => onMarkerClick(event, feature, layerID, metricID)}
       >
-        <div className={classes.squaresGrid}>
+        <div
+          style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}
+        >
           {speciesValues.map((item, index) => renderSquare(item, index))}
         </div>
       </div>

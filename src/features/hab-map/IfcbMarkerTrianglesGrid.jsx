@@ -1,26 +1,25 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid } from "@material-ui/core";
-import { Marker } from "react-map-gl";
+import { Grid } from "@mui/material";
+import { Marker } from "react-map-gl/maplibre";
 import { DATA_LAYERS } from "../../Constants";
 
-const useStyles = makeStyles(() => ({
-  button: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-  },
-  squaresGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    alignItems: "baseline",
-  },
-  gridBreak: {
-    flexBasis: "100%",
-    height: 0,
-  },
-}));
+const buttonStyle = {
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+};
+
+const squaresGridStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "baseline",
+};
+
+const gridBreakStyle = {
+  flexBasis: "100%",
+  height: 0,
+};
 
 export default function IfcbMarkerTrianglesGrid({
   feature,
@@ -29,7 +28,6 @@ export default function IfcbMarkerTrianglesGrid({
   onMarkerClick,
   metricID,
 }) {
-  const classes = useStyles();
   const [offsetLeft, setOffsetLeft] = useState(-20);
   const [offsetTop, setOffsetTop] = useState(-20);
 
@@ -90,7 +88,7 @@ export default function IfcbMarkerTrianglesGrid({
 
     return (
       <React.Fragment key={index}>
-        <div className={classes.gridItem} style={{ height: squareSize }}>
+        <div style={{ height: squareSize }}>
           <svg viewBox="0 0 100 100" width={squareSize} height={squareSize}>
             <polygon
               points="0 0, 100 100, 0 100"
@@ -101,7 +99,7 @@ export default function IfcbMarkerTrianglesGrid({
             />
           </svg>
         </div>
-        {rowEnd && <div className={classes.gridBreak}></div>}
+        {rowEnd && <div style={gridBreakStyle}></div>}
       </React.Fragment>
     );
     /*
@@ -140,10 +138,10 @@ export default function IfcbMarkerTrianglesGrid({
       offsetTop={offsetTop}
     >
       <div
-        className={classes.button}
+        style={buttonStyle}
         onClick={(event) => onMarkerClick(event, feature, layerID, metricID)}
       >
-        <div className={classes.squaresGrid}>
+        <div style={squaresGridStyle}>
           {speciesValues.map((item, index) => renderSquare(item, index))}
         </div>
       </div>

@@ -82,21 +82,22 @@ export const spatialGridSlice = createSlice({
       });
     },
   },
-  extraReducers: {
-    [fetchBoundingBox.pending]: (state) => {
-      state.status = "loading";
-    },
-    [fetchBoundingBox.fulfilled]: (state, action) => {
-      state.status = "succeeded";
-      const initialGrid = createGridSquares(action.payload.boundingBox);
-      state.gridJson = initialGrid;
-      state.gridBoundingBox = action.payload.boundingBox;
-      state.gridSquares = state.gridSquares.concat(initialGrid);
-    },
-    [fetchBoundingBox.rejected]: (state, action) => {
-      state.status = "failed";
-      state.error = action.error.message;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchBoundingBox.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchBoundingBox.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const initialGrid = createGridSquares(action.payload.boundingBox);
+        state.gridJson = initialGrid;
+        state.gridBoundingBox = action.payload.boundingBox;
+        state.gridSquares = state.gridSquares.concat(initialGrid);
+      })
+      .addCase(fetchBoundingBox.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 

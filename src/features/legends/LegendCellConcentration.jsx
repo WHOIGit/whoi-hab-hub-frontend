@@ -1,31 +1,13 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import DotMarker from "../../images/dot-grey.svg";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(1),
-    width: 300,
-    transition: "all 0.3s",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    zIndex: 2000,
-  },
-  legendGrid: {
-    fontSize: ".8em",
-  },
-  dotSquare: {
-    display: "block",
-    width: "20px",
-    height: "20px",
-  },
-}));
+const LegendGrid = styled(Grid)({
+  fontSize: ".8em",
+});
 
 export default function LegendCellConcentration() {
-  const classes = useStyles();
-
   const maxSquareSize = 30;
   const minSquareSize = 8;
   const strokeColor = "black";
@@ -34,13 +16,7 @@ export default function LegendCellConcentration() {
 
   return (
     <>
-      <Grid
-        container
-        spacing={3}
-        justify="center"
-        alignItems="center"
-        className={classes.legendGrid}
-      >
+      <LegendGrid container spacing={3} justifyContent="center" alignItems="center">
         {/*
         <Grid item>
           <Typography variant="caption" display="block" align="center">
@@ -67,7 +43,9 @@ export default function LegendCellConcentration() {
       */}
         <Grid item>
           <Typography variant="caption" display="block" align="center">
-            <div className={classes.dotSquare}>
+            <div
+              style={{ display: "block", width: "20px", height: "20px" }}
+            >
               <img src={DotMarker} alt="No detection marker" />
             </div>
           </Typography>
@@ -152,77 +130,41 @@ export default function LegendCellConcentration() {
             </svg>
           </Typography>
         </Grid>
-      </Grid>
+      </LegendGrid>
 
-      <Grid
-        container
-        spacing={1}
-        justify="center"
-        alignItems="center"
-        className={classes.legendGrid}
-      >
+      <LegendGrid container spacing={1} justifyContent="center" alignItems="center">
         <Grid item>
-          <Typography
-            variant="caption"
-            display="block"
-            align="center"
-            className={classes.legendText}
-          >
+          <Typography variant="caption" display="block" align="center">
             ND
           </Typography>
         </Grid>
 
         <Grid item>
-          <Typography
-            variant="caption"
-            display="block"
-            align="center"
-            className={classes.legendText}
-          >
+          <Typography variant="caption" display="block" align="center">
             &gt;100
           </Typography>
         </Grid>
         <Grid item>
-          <Typography
-            variant="caption"
-            display="block"
-            align="center"
-            className={classes.legendText}
-          >
+          <Typography variant="caption" display="block" align="center">
             &gt;1000
           </Typography>
         </Grid>
         <Grid item>
-          <Typography
-            variant="caption"
-            display="block"
-            align="center"
-            className={classes.legendText}
-          >
+          <Typography variant="caption" display="block" align="center">
             &gt;1x10<sup>4</sup>
           </Typography>
         </Grid>
         <Grid item>
-          <Typography
-            variant="caption"
-            display="block"
-            align="center"
-            className={classes.legendText}
-          >
+          <Typography variant="caption" display="block" align="center">
             &gt;1x10<sup>5</sup>
           </Typography>
         </Grid>
         <Grid item>
-          <Typography
-            variant="caption"
-            display="block"
-            align="center"
-            className={classes.legendText}
-          >
+          <Typography variant="caption" display="block" align="center">
             &gt;1x10<sup>6</sup>
           </Typography>
         </Grid>
-      </Grid>
+      </LegendGrid>
 
       <Typography variant="body2" align="center" gutterBottom>
         Cells L <sup>-1</sup>

@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/maplibre";
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({
-  button: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-  },
-}));
+const buttonStyle = {
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+};
 
 const IfcbMarkerIcon = ({
   feature,
@@ -20,7 +16,6 @@ const IfcbMarkerIcon = ({
 }) => {
   const [offsetLeft, setOffsetLeft] = useState(-32);
   const [offsetTop, setOffsetTop] = useState(-25);
-  const classes = useStyles();
   const maxSquareSize = 30;
   const minSquareSize = 8;
 
@@ -155,7 +150,7 @@ const IfcbMarkerIcon = ({
       captureClick={true}
     >
       <div
-        className={classes.button}
+        style={buttonStyle}
         onClick={(event) => onMarkerClick(event, feature, layerID, metricID)}
       >
         <div>

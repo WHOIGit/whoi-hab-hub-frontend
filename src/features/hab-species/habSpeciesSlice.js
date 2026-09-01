@@ -140,36 +140,37 @@ export const habSpeciesSlice = createSlice({
       });
     },
   },
-  extraReducers: {
-    [fetchHabSpecies.pending]: (state) => {
-      state.status = "loading";
-    },
-    [fetchHabSpecies.fulfilled]: (state, action) => {
-      state.status = "succeeded";
-      // Add any fetched layers to the array
-      state.species = state.species.concat(action.payload);
-      state.species.forEach((element, index) => {
-        // check if env variable to set initial species list exists.
-        // if not, use first 6
-        if (INITIAL_SPECIES_LIST) {
-          if (INITIAL_SPECIES_LIST.includes(element.id)) {
-            element.visibility = true;
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchHabSpecies.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchHabSpecies.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        // Add any fetched layers to the array
+        state.species = state.species.concat(action.payload);
+        state.species.forEach((element, index) => {
+          // check if env variable to set initial species list exists.
+          // if not, use first 6
+          if (INITIAL_SPECIES_LIST) {
+            if (INITIAL_SPECIES_LIST.includes(element.id)) {
+              element.visibility = true;
+            } else {
+              element.visibility = false;
+            }
           } else {
-            element.visibility = false;
+            if (index < 6) {
+              element.visibility = true;
+            } else {
+              element.visibility = false;
+            }
           }
-        } else {
-          if (index < 6) {
-            element.visibility = true;
-          } else {
-            element.visibility = false;
-          }
-        }
+        });
+      })
+      .addCase(fetchHabSpecies.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
-    },
-    [fetchHabSpecies.rejected]: (state, action) => {
-      state.status = "failed";
-      state.error = action.error.message;
-    },
   },
 });
 

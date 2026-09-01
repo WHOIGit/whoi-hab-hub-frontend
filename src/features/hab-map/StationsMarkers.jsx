@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/maplibre";
 import { format, parseISO } from "date-fns";
 import axiosInstance from "../../app/apiAxios";
 import StationsMarkerIcon from "./StationsMarkerIcon";
 import { selectMaxMeanOption } from "../data-layers/dataLayersSlice";
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({
-  button: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-  },
-}));
-
 export default function StationsMarkers({ onMarkerClick, metricID, layerID }) {
   const habSpecies = useSelector((state) => state.habSpecies.species);
   const dateFilter = useSelector((state) => state.dateFilter);
   const showMaxMean = useSelector(selectMaxMeanOption);
-  const classes = useStyles();
 
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
@@ -74,7 +63,7 @@ export default function StationsMarkers({ onMarkerClick, metricID, layerID }) {
           captureClick={true}
         >
           <div
-            className={classes.button}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
             onClick={(event) =>
               onMarkerClick(event, feature, layerID, metricID)
             }

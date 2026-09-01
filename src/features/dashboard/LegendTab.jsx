@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Divider, IconButton, Tooltip } from "@material-ui/core";
-import { Launch } from "@material-ui/icons";
+import Box from "@mui/material/Box";
+import { Typography, Divider, IconButton, Tooltip } from "@mui/material";
+import { Launch } from "@mui/icons-material";
 
 import LegendToxicity from "../legends/LegendToxicity";
 import LegendCellConcentration from "../legends/LegendCellConcentration";
@@ -14,27 +14,10 @@ import {
 } from "../data-layers/dataLayersSlice";
 import { DATA_LAYERS } from "../../Constants";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  legendBox: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  legendBoxTop: {
-    marginTop: theme.spacing(0),
-  },
-  legendDivider: {
-    maring: theme.spacing(2),
-  },
-  popper: {
-    zIndex: 9999,
-  },
-}));
+const legendBoxSx = { mt: 2, mb: 2 };
+const legendBoxTopSx = { mt: 0 };
 
 export default function LegendTab() {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const dataLayers = useSelector(selectVisibleLayerIds);
 
@@ -48,35 +31,35 @@ export default function LegendTab() {
   };
 
   return (
-    <div className={classes.root}>
-      <div className={`${classes.legendBox} ${classes.legendBoxTop}`}>
+    <Box sx={{ p: 2 }}>
+      <Box sx={[legendBoxSx, legendBoxTopSx]}>
         <Typography variant="subtitle1" display="block" gutterBottom>
           Data Sources
         </Typography>
 
         <DataLayersList />
-      </div>
+      </Box>
       <Divider />
 
-      <div className={classes.legendBox}>
+      <Box sx={legendBoxSx}>
         <Typography variant="subtitle1" display="block" gutterBottom>
           HAB Species/Syndrome
         </Typography>
 
         <HabSpeciesList />
-      </div>
+      </Box>
       <Divider />
 
       {(dataLayers.includes(DATA_LAYERS.cellConcentrationLayer) ||
         dataLayers.includes(DATA_LAYERS.cellConcentrationSpatialGridLayer)) && (
         <>
-          <div className={classes.legendBox}>
+          <Box sx={legendBoxSx}>
             <Typography variant="subtitle1" display="block" gutterBottom>
               Cell Concentration
               <Tooltip
                 title="Open window"
-                classes={{
-                  popper: classes.popper,
+                slotProps={{
+                  popper: { sx: { zIndex: 9999 } },
                 }}
               >
                 <IconButton
@@ -90,20 +73,20 @@ export default function LegendTab() {
               </Tooltip>
             </Typography>
             <LegendCellConcentration />
-          </div>
+          </Box>
           <Divider />
         </>
       )}
 
       {dataLayers.includes(DATA_LAYERS.stationsLayer) && (
         <>
-          <div className={classes.legendBox}>
+          <Box sx={legendBoxSx}>
             <Typography variant="subtitle1" display="block" gutterBottom>
               Shellfish Toxicity
               <Tooltip
                 title="Open window"
-                classes={{
-                  popper: classes.popper,
+                slotProps={{
+                  popper: { sx: { zIndex: 9999 } },
                 }}
               >
                 <IconButton
@@ -115,10 +98,10 @@ export default function LegendTab() {
               </Tooltip>
             </Typography>
             <LegendToxicity />
-          </div>
+          </Box>
           <Divider />
         </>
       )}
-    </div>
+    </Box>
   );
 }

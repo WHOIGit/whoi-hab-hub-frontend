@@ -4,8 +4,7 @@ import { parseISO } from "date-fns";
 import _ from "lodash";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { makeStyles } from "@material-ui/styles";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@mui/material";
 import { changeDateRange } from "./dateFilterSlice";
 
 import axiosInstance from "../../app/apiAxios";
@@ -25,29 +24,6 @@ let LIMIT_DATA_START_DATE = null;
 if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
   LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    position: "relative",
-    display: "flex",
-    margin: theme.spacing(0),
-    alignItems: "center",
-    padding: theme.spacing(0),
-    transition: "all 0.3s",
-  },
-  placeholder: {
-    margin: "0 auto",
-  },
-  button: {
-    margin: theme.spacing(0),
-    position: "absolute",
-    top: 0,
-    left: 0,
-  },
-  collapse: {
-    bottom: "-320px",
-  },
-}));
 
 function DataTimeline({
   onDateRangeReset,
@@ -70,7 +46,6 @@ function DataTimeline({
   const [chartData, setChartData] = useState([]);
   const [chartBands, setChartBands] = useState([]);
   const [chartWidth, setChartWidth] = useState(widthWithDashboard);
-  const classes = useStyles();
 
   useEffect(() => {
     async function fetchResults() {
@@ -266,10 +241,19 @@ function DataTimeline({
   };
 
   return (
-    <div className={classes.root}>
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        margin: 0,
+        alignItems: "center",
+        padding: 0,
+        transition: "all 0.3s",
+      }}
+    >
       {!isLoaded && (
         <div>
-          <div className={classes.placeholder}>
+          <div style={{ margin: "0 auto" }}>
             <CircularProgress />
           </div>
         </div>

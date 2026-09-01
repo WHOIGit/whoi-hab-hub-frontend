@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { species } from '../hab-species'
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: 36,
-    height: 36,
-    transform: 'rotate(-90deg)',
-  },
-  triangle: {
-    stroke: '#de2d26',
-    strokeWidth: 4,
-  }
-}));
+const rootStyle = {
+  width: 36,
+  height: 36,
+  transform: 'rotate(-90deg)',
+};
 
 const IfcbMarkerIcon = ({visibleSpecies, maxMeanData}) => {
-  const classes = useStyles();
-
   // set the percentage for each slice by number of visible species
   const slicePercent = 1 / visibleSpecies.length;
   console.log(maxMeanData);
@@ -78,7 +69,7 @@ const IfcbMarkerIcon = ({visibleSpecies, maxMeanData}) => {
 
   return (
     <div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" className={classes.root}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" style={rootStyle}>
           {slices.map(slice => renderSlice(slice))}
         </svg>
     </div>

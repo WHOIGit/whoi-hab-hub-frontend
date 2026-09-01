@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Source, Layer } from "react-map-gl";
+import { Source, Layer } from "react-map-gl/maplibre";
 import { format, parseISO } from "date-fns";
-import { makeStyles } from "@material-ui/styles";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@mui/material";
 
 import axiosInstance from "../../app/apiAxios";
 import { DATA_LAYERS } from "../../Constants";
 import ClosuresIconLayer from "./ClosuresIconLayer";
 import ClosuresLayerDialog from "../data-layers/ClosuresLayerDialog";
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({
-  placeholder: {
-    position: "absolute",
-    left: "50%",
-    top: "40%",
-  },
-}));
-
 export default function ClosuresLayer({ layerID }) {
   const dateFilter = useSelector((state) => state.dateFilter);
-  const classes = useStyles();
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -110,7 +99,7 @@ export default function ClosuresLayer({ layerID }) {
   return (
     <div>
       {!isLoaded && (
-        <div className={classes.placeholder}>
+        <div style={{ position: "absolute", left: "50%", top: "40%" }}>
           <CircularProgress />
         </div>
       )}

@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
 import {
   Typography,
   TableContainer,
@@ -10,17 +9,10 @@ import {
   TableCell,
   Box,
   Grid
-} from "@material-ui/core";
-import DescriptionIcon from "@material-ui/icons/Description";
-
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles(theme => ({
-  table: {}
-}));
+} from "@mui/material";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 export default function ClosuresList({ results }) {
-  const classes = useStyles();
-
   function renderClosureItem(closure) {
     return (
       <Box mb={4} key={closure.id}>
@@ -28,7 +20,6 @@ export default function ClosuresList({ results }) {
           container
           spacing={1}
           alignItems="center"
-          className={classes.legendGrid}
         >
           <Grid item xs={9}>
             <Typography variant="subtitle1" display="block" gutterBottom>
@@ -64,7 +55,6 @@ export default function ClosuresList({ results }) {
 
         <TableContainer>
           <Table
-            className={classes.table}
             size="small"
             aria-label="Species and Duration Table"
           >

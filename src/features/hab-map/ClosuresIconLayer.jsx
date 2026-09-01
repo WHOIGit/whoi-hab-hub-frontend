@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { Source, Layer } from "react-map-gl";
-import { useMap } from "react-map-gl";
+import { Source, Layer } from "react-map-gl/maplibre";
+import { useMap } from "react-map-gl/maplibre";
 import { DATA_LAYERS } from "../../Constants";
 
 export default function ClosuresIconLayer({ layerID, results }) {

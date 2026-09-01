@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Source, Layer } from "react-map-gl";
+import { Source, Layer } from "react-map-gl/maplibre";
 import { format, parseISO } from "date-fns";
 // eslint-disable-next-line no-undef
 const API_URL = process.env.REACT_APP_API_URL;

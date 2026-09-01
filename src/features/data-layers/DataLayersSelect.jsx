@@ -7,8 +7,8 @@ import {
   Checkbox,
   Typography,
   Grid,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+  Box,
+} from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { changeLayerVisibility } from "./dataLayersSlice";
 import DiamondMarker from "../../images/diamond.svg";
@@ -17,34 +17,9 @@ import TriangleMarker from "../../images/triangle.svg";
 // local
 import { DATA_LAYERS } from "../../Constants";
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    width: "100%",
-  },
-  checkBoxes: {
-    ...theme.typography.body2,
-  },
-  label: {
-    width: "100%",
-  },
-  labelText: {
-    paddingTop: "5px",
-  },
-  layerIcon: {
-    width: "25px",
-  },
-  closureIcon: {
-    backgroundColor: "#f2b036",
-  },
-  closureSeasonalIcon: {
-    backgroundColor: "#FFEB3B",
-  },
-}));
-
 export default function HabSpeciesForm() {
   const dataLayers = useSelector((state) => state.dataLayers.layers);
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   const handleCheckboxChange = (event, dataLayer) => {
     // only one of cell concentration-layer/biovolume-layer can be active at one time
@@ -105,9 +80,9 @@ export default function HabSpeciesForm() {
   const renderLayerControl = (dataLayer) => {
     return (
       <FormControlLabel
-        classes={{
-          root: classes.checkBoxes, // class name, e.g. `classes-nesting-root-x`
-          label: classes.label, // class name, e.g. `classes-nesting-label-x`
+        sx={(theme) => ({ ...theme.typography.body2 })}
+        slotProps={{
+          typography: { sx: { width: "100%" } },
         }}
         key={dataLayer.id}
         control={
@@ -124,18 +99,18 @@ export default function HabSpeciesForm() {
               <Typography
                 variant="body2"
                 color="textSecondary"
-                className={classes.labelText}
+                sx={{ pt: "5px" }}
               >
                 {dataLayer.name}
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <div>
+              <Box>
                 {dataLayer.id === DATA_LAYERS.stationsLayer && (
                   <img
                     src={DiamondMarker}
                     alt="Station Toxicity Legend Icon"
-                    className={classes.layerIcon}
+                    style={{ width: "25px" }}
                   />
                 )}
 
@@ -143,7 +118,7 @@ export default function HabSpeciesForm() {
                   <img
                     src={CircleMarker}
                     alt="Fixed Location Legend Icon"
-                    className={classes.layerIcon}
+                    style={{ width: "25px" }}
                   />
                 )}
 
@@ -152,7 +127,7 @@ export default function HabSpeciesForm() {
                   <img
                     src={TriangleMarker}
                     alt="Spatial Grid Legend Icon"
-                    className={classes.layerIcon}
+                    style={{ width: "25px" }}
                   />
                 )}
 
@@ -160,7 +135,7 @@ export default function HabSpeciesForm() {
                   <img
                     src={CircleMarker}
                     alt="Biovolume Legend Icon"
-                    className={classes.layerIcon}
+                    style={{ width: "25px" }}
                   />
                 )}
 
@@ -168,7 +143,7 @@ export default function HabSpeciesForm() {
                   <img
                     src="/images/icon-shellfish-closure.png"
                     alt="Closures Legend Icon"
-                    className={`${classes.layerIcon} ${classes.closureIcon}`}
+                    style={{ width: "25px", backgroundColor: "#f2b036" }}
                   />
                 )}
 
@@ -176,10 +151,10 @@ export default function HabSpeciesForm() {
                   <img
                     src="/images/icon-shellfish-closure.png"
                     alt="Closures Legend Icon"
-                    className={`${classes.layerIcon} ${classes.closureSeasonalIcon}`}
+                    style={{ width: "25px", backgroundColor: "#FFEB3B" }}
                   />
                 )}
-              </div>
+              </Box>
             </Grid>
           </Grid>
         }
@@ -188,7 +163,7 @@ export default function HabSpeciesForm() {
   };
 
   return (
-    <FormControl component="fieldset" className={classes.formControl}>
+    <FormControl component="fieldset" sx={{ width: "100%" }}>
       <FormLabel component="legend">Data Layers</FormLabel>
       <FormGroup>
         {dataLayers.map((layer) => renderLayerControl(layer))}

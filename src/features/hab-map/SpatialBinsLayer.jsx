@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Source, Layer } from "react-map-gl";
+import { Source, Layer } from "react-map-gl/maplibre";
 import { format, parseISO } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import squareGrid from "@turf/square-grid";

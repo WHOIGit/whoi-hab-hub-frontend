@@ -1,18 +1,10 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Link } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}));
+import Box from "@mui/material/Box";
+import { Typography, Link } from "@mui/material";
 
 export default function FeedbackText() {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
+    <Box sx={{ p: 2 }}>
       <Typography variant="body2" display="block" gutterBottom>
         The HAB hub data is being developed as a data access and visualization
         portal for the New England Harmful Algal Bloom Observing Network (
@@ -27,6 +19,6 @@ export default function FeedbackText() {
         comments to <Link href="mailto:mrichlen@whoi.edu">Mindy Richlen</Link>{" "}
         and <Link href="mailto:mbrosnahan@whoi.edu">Mike Brosnahan</Link>
       </Typography>
-    </div>
+    </Box>
   );
 }

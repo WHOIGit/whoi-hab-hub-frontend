@@ -1,35 +1,16 @@
 import React, { useState } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuIcon from "@material-ui/icons/Menu";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import logoNehab from "../images/logo-nehab.png";
 import logoNehabon from "../images/logo-nehabon.png";
 import logoPhytoArm from "../images/logo-phytoarm.png";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    color: theme.palette.secondary.dark,
-    marginRight: theme.spacing(2),
-  },
-  menuImg: {
-    width: "200px",
-  },
-  menuImg2: {
-    width: "170px",
-  },
-}));
-
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5",
-  },
-})((props) => (
+const StyledMenu = (props) => (
   <Menu
     elevation={0}
-    getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "bottom",
       horizontal: "center",
@@ -38,12 +19,16 @@ const StyledMenu = withStyles({
       vertical: "top",
       horizontal: "center",
     }}
+    slotProps={{
+      paper: {
+        sx: { border: "1px solid #d3d4d5" },
+      },
+    }}
     {...props}
   />
-));
+);
 
 export default function HeaderDropdownMenu() {
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
   function handleClick(event) {
@@ -58,7 +43,7 @@ export default function HeaderDropdownMenu() {
     <React.Fragment>
       <IconButton
         edge="start"
-        className={classes.root}
+        sx={{ color: (theme) => theme.palette.secondary.dark, mr: 2 }}
         onClick={handleClick}
         aria-controls="dropdown-menu"
         aria-haspopup="true"
@@ -83,7 +68,7 @@ export default function HeaderDropdownMenu() {
             <img
               src={logoNehab}
               alt="NeHAB Logo"
-              className={classes.menuImg2}
+              style={{ width: "170px" }}
             />
           </a>
         </MenuItem>
@@ -96,7 +81,7 @@ export default function HeaderDropdownMenu() {
             <img
               src={logoNehabon}
               alt="NeHABON Logo"
-              className={classes.menuImg}
+              style={{ width: "200px" }}
             />
           </a>
         </MenuItem>
@@ -105,7 +90,7 @@ export default function HeaderDropdownMenu() {
             <img
               src={logoPhytoArm}
               alt="PhytoArm Logo"
-              className={classes.menuImg}
+              style={{ width: "200px" }}
             />
           </a>
         </MenuItem>

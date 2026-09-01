@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite *)",
+      "Bash(awk -F: '{s+=$2} END {print s}')",
+      "Bash(npm install *)",
+      "Bash(python3 -)",
+      "Bash(npx --no-install eslint src/features/hab-map/IfcbMarkers.jsx src/features/hab-map/IfcbSpatialMarkerGrid.jsx src/features/hab-map/IfcbSpatialMarkers.jsx src/features/hab-map/SpatialGridMarkers.jsx src/features/hab-map/StationsMarkerIcon.jsx src/features/hab-map/StationsMarkers.jsx)",
+      "Bash(npm run *)",
+      "Bash(node check.js)"
+    ]
+  }
+}

@@ -6,24 +6,16 @@ import {
   Radio,
   FormControlLabel,
   Typography,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+} from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { changeMaxMean, selectMaxMeanOption } from "./dataLayersSlice";
-
-const useStyles = makeStyles(() => ({
-  formControl: {
-    width: "100%",
-  },
-}));
 
 export default function MaxMeanSelect() {
   const showMaxMean = useSelector(selectMaxMeanOption);
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   return (
-    <FormControl component="fieldset" className={classes.formControl}>
+    <FormControl component="fieldset" sx={{ width: "100%" }}>
       <FormLabel component="legend">Data Type</FormLabel>
       <RadioGroup
         aria-label="Show Max or Mean"

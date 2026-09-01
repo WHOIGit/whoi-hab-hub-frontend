@@ -6,31 +6,18 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+} from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import {
   changeSpeciesVisibility,
   changeSpeciesColor,
   selectSpeciesByType,
 } from "./habSpeciesSlice";
-import { ColorPicker } from "material-ui-color";
-import { PALETTE } from "../../Constants";
+import SpeciesColorSwatch from "./SpeciesColorSwatch";
 import HabSpeciesNameDisplay from "./HabSpeciesNameDisplay";
-
-const useStyles = makeStyles((theme) => ({
-  formGroup: {
-    overflowY: "scroll",
-    marginBottom: theme.spacing(2),
-  },
-  colorPickerBtn: {
-    display: "inline-block",
-  },
-}));
 
 export default function HabSpeciesSelectByType({ species_type, limitReached }) {
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   const speciesList = useSelector((state) =>
     selectSpeciesByType(state, species_type)
@@ -51,7 +38,7 @@ export default function HabSpeciesSelectByType({ species_type, limitReached }) {
   return (
     <>
       <FormLabel component="legend">{species_type}</FormLabel>
-      <FormGroup className={classes.formGroup}>
+      <FormGroup sx={{ overflowY: "scroll", mb: 2 }}>
         {speciesList.map((species) => {
           return (
             <FormControlLabel
@@ -72,22 +59,17 @@ export default function HabSpeciesSelectByType({ species_type, limitReached }) {
                   component="span"
                 >
                   {" "}
-                  <div className={classes.colorPickerBtn}>
-                    <ColorPicker
-                      palette={PALETTE}
-                      value={species.primaryColor}
-                      hideTextfield
-                      disableAlpha
-                      onChange={(event) =>
-                        dispatch(
-                          changeSpeciesColor({
-                            primaryColor: "#" + event.hex,
-                            species: species,
-                          })
-                        )
-                      }
-                    />
-                  </div>
+                  <SpeciesColorSwatch
+                    value={species.primaryColor}
+                    onChange={(hex) =>
+                      dispatch(
+                        changeSpeciesColor({
+                          primaryColor: hex,
+                          species: species,
+                        })
+                      )
+                    }
+                  />
                   <HabSpeciesNameDisplay species={species} />
                 </Typography>
               }

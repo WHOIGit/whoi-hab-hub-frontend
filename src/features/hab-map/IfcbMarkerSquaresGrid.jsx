@@ -1,25 +1,24 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid } from "@material-ui/core";
-import { Marker } from "react-map-gl";
+import { Grid } from "@mui/material";
+import { Marker } from "react-map-gl/maplibre";
 
-const useStyles = makeStyles(() => ({
-  button: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-  },
-  squaresGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    alignItems: "baseline",
-  },
-  gridBreak: {
-    flexBasis: "100%",
-    height: 0,
-  },
-}));
+const buttonStyle = {
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+};
+
+const squaresGridStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "baseline",
+};
+
+const gridBreakStyle = {
+  flexBasis: "100%",
+  height: 0,
+};
 
 export default function IfcbMarkerSquaresGrid({
   feature,
@@ -30,7 +29,6 @@ export default function IfcbMarkerSquaresGrid({
 }) {
   const [offsetLeft, setOffsetLeft] = useState(15);
   const [offsetTop, setOffsetTop] = useState(-10);
-  const classes = useStyles();
   // set some constants for square sizes
   const maxSquareSize = 30;
   const minSquareSize = 8;
@@ -77,7 +75,7 @@ export default function IfcbMarkerSquaresGrid({
 
     return (
       <React.Fragment key={index}>
-        <div className={classes.gridItem} style={{ height: squareSize }}>
+        <div style={{ height: squareSize }}>
           <svg width={squareSize} height={squareSize}>
             <rect
               width={squareSize}
@@ -91,7 +89,7 @@ export default function IfcbMarkerSquaresGrid({
             ></rect>
           </svg>
         </div>
-        {rowEnd && <div className={classes.gridBreak}></div>}
+        {rowEnd && <div style={gridBreakStyle}></div>}
       </React.Fragment>
     );
     /*
@@ -130,10 +128,10 @@ export default function IfcbMarkerSquaresGrid({
       captureClick={true}
     >
       <div
-        className={classes.button}
+        style={buttonStyle}
         //onClick={(event) => onMarkerClick(event, feature, layerID, metricID)}
       >
-        <div className={classes.squaresGrid}>
+        <div style={squaresGridStyle}>
           {speciesValues.map((item, index) => renderSquare(item, index))}
         </div>
       </div>

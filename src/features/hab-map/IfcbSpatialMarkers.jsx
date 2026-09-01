@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/maplibre";
 import * as turfMeta from "@turf/meta";
 import { format, parseISO } from "date-fns";
 import IfcbSpatialMarkerGrid from "./IfcbSpatialMarkerGrid";
@@ -13,17 +12,6 @@ import { selectVisibleSpecies } from "../hab-species/habSpeciesSlice";
 // eslint-disable-next-line no-undef
 const API_URL = process.env.REACT_APP_API_URL;
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles(theme => ({
-  button: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    width: "12px",
-    height: "12px"
-  }
-}));
-
 export default function IfcbSpatialMarkers({ onMarkerClick, gridSquare }) {
   console.log(gridSquare);
   const visibleSpecies = useSelector(selectVisibleSpecies);
@@ -31,7 +19,6 @@ export default function IfcbSpatialMarkers({ onMarkerClick, gridSquare }) {
   const dateFilter = useSelector(state => state.dateFilter);
   const showMaxMean = useSelector(selectMaxMeanOption);
 
-  const classes = useStyles();
   const layerID = "ifcb-spatial-layer";
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);

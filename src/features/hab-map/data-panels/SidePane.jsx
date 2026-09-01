@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/styles";
-import { Card, CardHeader, CardContent, IconButton } from "@material-ui/core";
-import { Close, OpenWith, Minimize } from "@material-ui/icons";
+import { Card, CardHeader, CardContent, IconButton } from "@mui/material";
+import { Close, OpenWith, Minimize } from "@mui/icons-material";
 // local
 import StationsGraph from "./StationsGraph";
 import IfcbGraph from "./IfcbGraph";
@@ -11,36 +10,27 @@ import { selectVisibleSpecies } from "../../hab-species/habSpeciesSlice";
 import { DATA_LAYERS, METRIC_IDS } from "../../../Constants";
 
 const expandWidth = window.outerWidth - 420;
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(1),
-    width: 600,
-    transition: "all 0.3s",
-  },
-  media: {
-    height: 140,
-  },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: "1.2rem",
-  },
-  header: {
-    color: theme.palette.primary.main,
-  },
-  expand: {
-    position: "fixed",
-    top: 0,
-    left: 10,
-    width: expandWidth,
-    height: "95vh",
-    zIndex: 3000,
-    overflowY: "scroll",
-  },
-  expandContent: {
-    width: expandWidth,
-    height: "80%",
-  },
-}));
+
+const rootSx = {
+  margin: 1,
+  width: 600,
+  transition: "all 0.3s",
+};
+
+const expandSx = {
+  position: "fixed",
+  top: 0,
+  left: 10,
+  width: expandWidth,
+  height: "95vh",
+  zIndex: 3000,
+  overflowY: "scroll",
+};
+
+const expandContentSx = {
+  width: expandWidth,
+  height: "80%",
+};
 
 export default function SidePane({
   results,
@@ -51,7 +41,6 @@ export default function SidePane({
   metricID,
 }) {
   const habSpecies = useSelector(selectVisibleSpecies);
-  const classes = useStyles();
   const [expandPane, setExpandPane] = useState(false);
   const [visibleResults, setVisibleResults] = useState([]);
 
@@ -110,10 +99,15 @@ export default function SidePane({
   }
 
   return (
-    <Card className={`${expandPane ? classes.expand : ""} ${classes.root}`}>
+    <Card sx={[rootSx, expandPane && expandSx]}>
       <CardHeader
-        classes={{
-          title: classes.title, // class name, e.g. `classes-nesting-label-x`
+        slotProps={{
+          title: {
+            sx: {
+              color: (theme) => theme.palette.primary.main,
+              fontSize: "1.2rem",
+            },
+          },
         }}
         action={
           <React.Fragment>
@@ -132,7 +126,7 @@ export default function SidePane({
         subheader={subTitle}
       />
 
-      <CardContent className={expandPane ? classes.expandContent : ""}>
+      <CardContent sx={expandPane ? expandContentSx : undefined}>
         {dataLayer === DATA_LAYERS.stationsLayer && (
           <StationsGraph
             results={results}

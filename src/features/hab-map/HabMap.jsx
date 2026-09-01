@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Map, { NavigationControl, ScaleControl } from "react-map-gl";
+import Map, { NavigationControl, ScaleControl } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
-import { makeStyles } from "@material-ui/styles";
 // local
 import DataPanel from "./data-panels/DataPanel";
 import StationsMarkers from "./StationsMarkers";
@@ -40,18 +39,15 @@ const scaleControlStyle = {
   padding: "10px",
 };
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({
-  dataPanelContainer: {
-    background: "none",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: 3000,
-    maxHeight: "100vh",
-    overflowY: "scroll",
-  },
-}));
+const dataPanelContainerStyle = {
+  background: "none",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  zIndex: 3000,
+  maxHeight: "100vh",
+  overflowY: "scroll",
+};
 
 const initialGridZoomArray = [
   // gridLength refers to the PostGIS SnapToGrid function length arg
@@ -73,8 +69,6 @@ const defaultViewport = {
 };
 
 export default function HabMap({ bookmarkViewport }) {
-  const classes = useStyles();
-
   const visibleLayerIds = useSelector(selectVisibleLayerIds);
   // only refers to map layer that use the Mapbox Layer/Source properties
   //const interactiveLayerIds = useSelector(selectInteractiveLayerIds);
@@ -240,7 +234,7 @@ export default function HabMap({ bookmarkViewport }) {
         <CurrentDateChip />
       </div>
       {features && (
-        <div className={classes.dataPanelContainer}>
+        <div style={dataPanelContainerStyle}>
           {features.map((feature) => (
             <DataPanel
               key={feature.id}

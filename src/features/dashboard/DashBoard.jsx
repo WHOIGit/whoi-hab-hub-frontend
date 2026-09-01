@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/styles";
-import { Box, Tabs, Tab } from "@material-ui/core";
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import {
   Stars,
   Layers,
@@ -9,7 +10,7 @@ import {
   Ballot,
   Bookmark,
   Help,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { useSelector } from "react-redux";
 // local imports
 import DataLayersTab from "./DataLayersTab";
@@ -21,76 +22,48 @@ import BookmarkTab from "./BookmarkTab";
 import { selectActiveGuideStep } from "../guide/guideSlice";
 import styles from "../guide/styles.module.css";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    //margin: theme.spacing(1),
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: "448px",
-    background: "none",
-    zIndex: 1200,
-    height: "100vh",
-    overflowY: "scroll",
-    transition: "all 0.3s",
-  },
-  dashboardContainer: {
-    //margin: theme.spacing(1),
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: "400px",
-    background: "#fff",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
-    color: "#6b6b76",
-    outline: "none",
-    height: "100vh",
-    overflowY: "scroll",
-    overflowX: "visible",
-  },
-  collapse: {
-    right: "-284px",
-  },
-  resetBtn: {
-    position: "absolute",
-    top: "-3px",
-    right: "15px",
-    zIndex: 100,
-  },
-  iconsContainer: {
-    borderLeft: `1px solid ${theme.palette.divider}`,
-    backgroundColor: theme.palette.primary.main,
-    position: "fixed",
-    top: 0,
-    right: 0,
-    zIndex: 4000,
-    height: "100vh",
-  },
-  indicator: {
-    left: "0px",
-  },
-  tabRoot: {
-    minWidth: "110px",
-    color: "white",
-    //boxShadow: "0px 0px 1px 1px #0000001a",
-  },
-  tabPanelRoot: {
-    maxWidth: "284px",
-  },
-  dashboardButtonBox: {
-    position: "absolute",
-    bottom: 0,
-  },
-  dashboardButton: {
-    color: "white",
-    width: "100%",
-    marginBottom: theme.spacing(1),
-  },
-  dashboardButtonLabel: {
-    // Aligns the content of the button vertically.
-    flexDirection: "column",
-  },
-}));
+const rootStyle = {
+  position: "absolute",
+  top: 0,
+  right: 0,
+  width: "448px",
+  background: "none",
+  zIndex: 1200,
+  height: "100vh",
+  overflowY: "scroll",
+  transition: "all 0.3s",
+};
+
+const dashboardContainerStyle = {
+  position: "absolute",
+  top: 0,
+  right: 0,
+  width: "400px",
+  background: "#fff",
+  boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+  color: "#6b6b76",
+  outline: "none",
+  height: "100vh",
+  overflowY: "scroll",
+  overflowX: "visible",
+};
+
+const iconsContainerSx = {
+  borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
+  backgroundColor: (theme) => theme.palette.primary.main,
+  position: "fixed",
+  top: 0,
+  right: 0,
+  zIndex: 4000,
+  height: "100vh",
+};
+
+const tabSx = {
+  minWidth: "110px",
+  color: "white",
+};
+
+const tabPanelStyle = { maxWidth: "284px" };
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -114,7 +87,6 @@ export default function Dashboard({
 }) {
   // Set const variables
   console.log("DASHBOARD");
-  const classes = useStyles();
   // Set local state
   const [tabValue, setTabValue] = useState(0);
   const activeGuideStep = useSelector(selectActiveGuideStep);
@@ -143,115 +115,61 @@ export default function Dashboard({
   return (
     <>
       <div
-        className={`${classes.root} control-panel ${
-          showControls ? "active" : classes.collapse
-        }`}
+        className="control-panel"
+        style={{
+          ...rootStyle,
+          right: showControls ? rootStyle.right : "-284px",
+        }}
       >
-        <div className={classes.dashboardContainer}>
+        <div style={dashboardContainerStyle}>
           <>
-            <div className={classes.iconsContainer}>
+            <Box sx={iconsContainerSx}>
               <Tabs
                 value={tabValue}
                 onChange={handleTabChange}
                 orientation="vertical"
-                classes={{
-                  indicator: classes.indicator,
-                }}
+                sx={{ "& .MuiTabs-indicator": { left: "0px" } }}
               >
                 <Tab
                   icon={<Ballot />}
                   label="Algal Species"
-                  className={activeGuideStep?.tabIndex === 0 && styles.pulse}
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
+                  className={
+                    activeGuideStep?.tabIndex === 0 ? styles.pulse : undefined
+                  }
+                  sx={tabSx}
                 />
                 <Tab
                   icon={<Layers />}
                   label="Data Layers"
-                  className={activeGuideStep?.tabIndex === 1 && styles.pulse}
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
+                  className={
+                    activeGuideStep?.tabIndex === 1 ? styles.pulse : undefined
+                  }
+                  sx={tabSx}
                 />
-                <Tab
-                  icon={<List />}
-                  label="Legend"
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
-                />
-                <Tab
-                  icon={<Bookmark />}
-                  label="Save Map"
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
-                />
-                <Tab
-                  icon={<Explore />}
-                  label="Links"
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
-                />
-                <Tab
-                  icon={<Stars />}
-                  label="Partners"
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
-                />
-                <Tab
-                  icon={<Help />}
-                  label="Guide"
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
-                />
+                <Tab icon={<List />} label="Legend" sx={tabSx} />
+                <Tab icon={<Bookmark />} label="Save Map" sx={tabSx} />
+                <Tab icon={<Explore />} label="Links" sx={tabSx} />
+                <Tab icon={<Stars />} label="Partners" sx={tabSx} />
+                <Tab icon={<Help />} label="Guide" sx={tabSx} />
               </Tabs>
-            </div>
+            </Box>
 
-            <TabPanel
-              value={tabValue}
-              index={0}
-              className={classes.tabPanelRoot}
-            >
+            <TabPanel value={tabValue} index={0} style={tabPanelStyle}>
               <HabSpeciesTab />
             </TabPanel>
-            <TabPanel
-              value={tabValue}
-              index={1}
-              className={classes.tabPanelRoot}
-            >
+            <TabPanel value={tabValue} index={1} style={tabPanelStyle}>
               <DataLayersTab />
             </TabPanel>
-            <TabPanel
-              value={tabValue}
-              index={2}
-              className={classes.tabPanelRoot}
-            >
+            <TabPanel value={tabValue} index={2} style={tabPanelStyle}>
               <LegendTab />
             </TabPanel>
-            <TabPanel
-              value={tabValue}
-              index={3}
-              className={classes.tabPanelRoot}
-            >
+            <TabPanel value={tabValue} index={3} style={tabPanelStyle}>
               <BookmarkTab />
             </TabPanel>
-            <TabPanel
-              value={tabValue}
-              index={4}
-              className={classes.tabPanelRoot}
-            >
+            <TabPanel value={tabValue} index={4} style={tabPanelStyle}>
               <LinksTab />
             </TabPanel>
-            <TabPanel
-              value={tabValue}
-              index={5}
-              className={classes.tabPanelRoot}
-            >
+            <TabPanel value={tabValue} index={5} style={tabPanelStyle}>
               <PartnersTab />
             </TabPanel>
           </>

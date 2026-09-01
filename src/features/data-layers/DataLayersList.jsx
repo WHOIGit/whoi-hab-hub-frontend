@@ -1,6 +1,5 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { Grid, Typography, Box } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import { DATA_LAYERS } from "../../Constants";
@@ -10,24 +9,8 @@ import TriangleMarker from "../../images/triangle.svg";
 import ClosureIcon from "../../images/icon-shellfish-closure.png";
 import { selectVisibleLayers } from "./dataLayersSlice";
 
-const useStyles = makeStyles(() => ({
-  formControl: {
-    width: "100%",
-  },
-  layerIcon: {
-    width: "25px",
-  },
-  closureIcon: {
-    backgroundColor: "#f2b036",
-  },
-  closureSeasonalIcon: {
-    backgroundColor: "#FFEB3B",
-  },
-}));
-
 export default function DataLayersList() {
   const dataLayers = useSelector(selectVisibleLayers);
-  const classes = useStyles();
 
   const renderLayerGrid = (dataLayer) => {
     let imgSrc;
@@ -54,29 +37,25 @@ export default function DataLayersList() {
       <Grid container spacing={2} key={dataLayer.id}>
         <Grid item xs={2}>
           {imgSrc && (
-            <div>
+            <Box>
               <img
                 src={imgSrc}
                 alt={dataLayer.name}
-                className={`${classes.layerIcon} ${
-                  dataLayer.id === DATA_LAYERS.closuresLayer
-                    ? classes.closureIcon
-                    : ""
-                }  ${
-                  dataLayer.id === DATA_LAYERS.closuresSeasonalLayer
-                    ? classes.closureSeasonalIcon
-                    : ""
-                }`}
+                style={{
+                  width: "25px",
+                  ...(dataLayer.id === DATA_LAYERS.closuresLayer && {
+                    backgroundColor: "#f2b036",
+                  }),
+                  ...(dataLayer.id === DATA_LAYERS.closuresSeasonalLayer && {
+                    backgroundColor: "#FFEB3B",
+                  }),
+                }}
               />
-            </div>
+            </Box>
           )}
         </Grid>
         <Grid item xs={10}>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            className={classes.labelText}
-          >
+          <Typography variant="body2" color="textSecondary">
             {dataLayer.name}
           </Typography>
         </Grid>

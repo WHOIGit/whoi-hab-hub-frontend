@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/styles";
-import { IconButton } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
 import Highcharts from "highcharts";
 import Exporting from "highcharts/modules/exporting";
 import ExportData from "highcharts/modules/export-data";
@@ -27,17 +26,6 @@ Boost(Highcharts);
 const API_URL = import.meta.env.VITE_API_URL;
 const expandWidth = window.outerWidth - 430;
 
-const useStyles = makeStyles(() => ({
-  chartContainer: {},
-  chartContainerExpand: {
-    width: expandWidth,
-    height: "100%",
-  },
-  metaDataCloseBtn: {
-    textAlign: "right",
-  },
-}));
-
 function IfcbGraph({
   visibleResults,
   metricID,
@@ -47,7 +35,6 @@ function IfcbGraph({
   dataLayer,
 }) {
   const habSpecies = useSelector(selectVisibleSpecies);
-  const classes = useStyles();
   const chartRef = useRef();
   // Local state
   const [chartOptions, setChartOptions] = useState({});
@@ -245,15 +232,15 @@ function IfcbGraph({
         options={chartOptions}
         containerProps={
           chartExpanded
-            ? { className: classes.chartContainerExpand }
-            : { className: classes.chartContainer }
+            ? { style: { width: expandWidth, height: "100%" } }
+            : { style: {} }
         }
         ref={chartRef}
       />
 
       {openMetaData && (
         <div>
-          <div className={classes.metaDataCloseBtn}>
+          <div style={{ textAlign: "right" }}>
             <IconButton
               onClick={() => setOpenMetaData(!openMetaData)}
               aria-label="close image panel"

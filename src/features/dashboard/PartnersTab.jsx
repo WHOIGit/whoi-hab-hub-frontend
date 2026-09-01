@@ -1,33 +1,13 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Link, Grid, Box } from "@material-ui/core";
+import { Typography, Link, Grid, Box } from "@mui/material";
 import NsfLogo from "../../images/nsf-logo.jpg";
 import NihLogo from "../../images/nih-new.png";
 import NccosLogo from "../../images/nccos_logofile.jpeg";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  listItem: {
-    paddingLeft: 0,
-  },
-  listItemIcon: {
-    minWidth: "auto",
-    marginLeft: "5px",
-  },
-  partnerLogo: {
-    display: "block",
-    margin: "0 auto",
-  },
-}));
-
 export default function PartnersTab() {
-  const classes = useStyles();
-
   return (
     <>
-      <div className={classes.root}>
+      <Box sx={{ p: 2 }}>
         <Typography variant="subtitle1" display="block" gutterBottom>
           Funders
         </Typography>
@@ -69,7 +49,7 @@ export default function PartnersTab() {
                 href="https://nsf.gov"
                 target="_blank"
                 rel="noreferrer"
-                className={classes.partnerLogo}
+                sx={{ display: "block", mx: "auto" }}
               >
                 <img src={NsfLogo} alt="NSF Logo" width="120"></img>
               </Link>
@@ -79,7 +59,7 @@ export default function PartnersTab() {
                 href="https://www.niehs.nih.gov"
                 target="_blank"
                 rel="noreferrer"
-                className={classes.partnerLogo}
+                sx={{ display: "block", mx: "auto" }}
               >
                 <img src={NihLogo} alt="NIHES Logo" width="120"></img>
               </Link>
@@ -89,14 +69,14 @@ export default function PartnersTab() {
                 href="https://coastalscience.noaa.gov/research/stressor-impacts-mitigation/merhab/"
                 target="_blank"
                 rel="noreferrer"
-                className={classes.partnerLogo}
+                sx={{ display: "block", mx: "auto" }}
               >
                 <img src={NccosLogo} alt="NCCOS Logo" width="90%"></img>
               </Link>
             </Grid>
           </Grid>
         </Box>
-      </div>
+      </Box>
     </>
   );
 }

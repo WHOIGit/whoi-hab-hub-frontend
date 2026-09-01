@@ -1,14 +1,12 @@
 import React from "react";
-import clsx from "clsx";
 import { useDrag } from "react-dnd";
-import { makeStyles } from "@material-ui/styles";
-import { Card, CardHeader, CardContent, IconButton } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepButton from "@material-ui/core/StepButton";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import { Box, Card, CardHeader, CardContent, IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepButton from "@mui/material/StepButton";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 // local imports
 import { changeActiveGuideStep } from "./guideSlice";
@@ -23,44 +21,7 @@ export default function GuidePane({
   transform,
   id,
 }) {
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      margin: theme.spacing(1),
-      width: 640,
-      transition: "all 0.3s",
-      zIndex: 2000,
-      display: "none",
-      cursor: "move",
-    },
-    guideOpen: {
-      display: "block",
-      position: "absolute",
-      left: left,
-      bottom: bottom,
-      //left: "50%",
-      //top: "50%",
-      transform: transform,
-    },
-    rootContent: {
-      width: "100%",
-    },
-    rootHeader: {
-      paddingBottom: 0,
-    },
-    title: {
-      color: theme.palette.primary.main,
-      fontSize: "1.1rem",
-    },
-    backButton: {
-      marginRight: theme.spacing(1),
-    },
-    instructions: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-  }));
   const dispatch = useDispatch();
-  const classes = useStyles();
   const guideSteps = useSelector((state) => state.guide.guideSteps);
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
@@ -75,11 +36,6 @@ export default function GuidePane({
     }),
     [id, left, bottom]
   );
-
-  const guideStyle = clsx({
-    [classes.root]: true, //always applies
-    [classes.guideOpen]: openGuide, //only when open === true
-  });
 
   const getStepContent = (stepId) => {
     const step = guideSteps.find((item) => item.stepId === stepId);
@@ -153,12 +109,39 @@ export default function GuidePane({
   };
 
   return (
-    <div className={guideStyle} ref={drag} id={id}>
+    <Box
+      ref={drag}
+      id={id}
+      sx={[
+        {
+          margin: 1,
+          width: 640,
+          transition: "all 0.3s",
+          zIndex: 2000,
+          display: "none",
+          cursor: "move",
+        },
+        openGuide && {
+          display: "block",
+          position: "absolute",
+          left: left,
+          bottom: bottom,
+          //left: "50%",
+          //top: "50%",
+          transform: transform,
+        },
+      ]}
+    >
       <Card>
         <CardHeader
-          classes={{
-            root: classes.rootHeader,
-            title: classes.title,
+          slotProps={{
+            root: { sx: { pb: 0 } },
+            title: {
+              sx: {
+                color: (theme) => theme.palette.primary.main,
+                fontSize: "1.1rem",
+              },
+            },
           }}
           action={
             <React.Fragment>
@@ -171,7 +154,7 @@ export default function GuidePane({
         />
 
         <CardContent>
-          <div className={classes.rootContent}>
+          <div style={{ width: "100%" }}>
             <Stepper nonLinear activeStep={activeStep} alternativeLabel>
               {guideSteps.map((step) => (
                 <Step key={step.stepId}>
@@ -186,13 +169,13 @@ export default function GuidePane({
             </Stepper>
             <div>
               <div>
-                <Typography className={classes.instructions}>
+                <Typography sx={{ mt: 1, mb: 1 }}>
                   <div dangerouslySetInnerHTML={getStepContent(activeStep)} />
                 </Typography>
                 <div>
                   <Button
                     onClick={handleBack}
-                    className={classes.backButton}
+                    sx={{ mr: 1 }}
                     disabled={activeStep === 0}
                   >
                     Back
@@ -210,6 +193,6 @@ export default function GuidePane({
           </div>
         </CardContent>
       </Card>
-    </div>
+    </Box>
   );
 }

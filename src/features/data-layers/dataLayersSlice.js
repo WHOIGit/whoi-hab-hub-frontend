@@ -87,43 +87,44 @@ export const dataLayersSlice = createSlice({
       });
     },
   },
-  extraReducers: {
-    [fetchLayers.pending]: (state) => {
-      state.status = "loading";
-    },
-    [fetchLayers.fulfilled]: (state, action) => {
-      state.status = "succeeded";
-      // Add any fetched layers to the array
-      state.layers = state.layers.concat(action.payload);
-      state.layers.forEach((element) => {
-        // hide closures layer by default on load
-        // only one of cell_concentration/biovolume can be active at one time
-        // default to cell_concentration as initial active layer
-        if (
-          element.id === DATA_LAYERS.closuresLayer ||
-          element.id === DATA_LAYERS.closuresSeasonalLayer ||
-          element.id === DATA_LAYERS.biovolumeLayer ||
-          element.id === DATA_LAYERS.biovolumeSpatialGridLayer
-        ) {
-          element.visibility = false;
-        } else {
-          element.visibility = true;
-        }
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchLayers.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchLayers.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        // Add any fetched layers to the array
+        state.layers = state.layers.concat(action.payload);
+        state.layers.forEach((element) => {
+          // hide closures layer by default on load
+          // only one of cell_concentration/biovolume can be active at one time
+          // default to cell_concentration as initial active layer
+          if (
+            element.id === DATA_LAYERS.closuresLayer ||
+            element.id === DATA_LAYERS.closuresSeasonalLayer ||
+            element.id === DATA_LAYERS.biovolumeLayer ||
+            element.id === DATA_LAYERS.biovolumeSpatialGridLayer
+          ) {
+            element.visibility = false;
+          } else {
+            element.visibility = true;
+          }
 
-        // fixed and spatial cell_concentration have same legend pane
-        // only one should show at a single time
-        if (legendLayerIds.includes(element.id)) {
-          element.legendVisibility = true;
-        }
-        if (interactiveLayerIds.includes(element.id)) {
-          element.interactiveLayer = true;
-        }
+          // fixed and spatial cell_concentration have same legend pane
+          // only one should show at a single time
+          if (legendLayerIds.includes(element.id)) {
+            element.legendVisibility = true;
+          }
+          if (interactiveLayerIds.includes(element.id)) {
+            element.interactiveLayer = true;
+          }
+        });
+      })
+      .addCase(fetchLayers.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
-    },
-    [fetchLayers.rejected]: (state, action) => {
-      state.status = "failed";
-      state.error = action.error.message;
-    },
   },
 });
 

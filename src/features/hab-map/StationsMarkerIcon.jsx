@@ -1,25 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-
-// eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: 20,
-    height: 20,
-    fontFamily: "Verdana",
-    fontSize: "1.8rem",
-    fontWeight: "bold",
-  },
-  triangle: {
-    stroke: "#de2d26",
-    strokeWidth: 2,
-  },
-}));
 
 export default function StationsMarkerIcon({ maxMeanValue }) {
   const habSpecies = useSelector((state) => state.habSpecies.species);
-  const classes = useStyles();
 
   // set colors to use for the gradient from Species
   const activeSpecies = habSpecies.filter(
@@ -65,7 +48,13 @@ export default function StationsMarkerIcon({ maxMeanValue }) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 100"
-        className={classes.root}
+        style={{
+          width: 20,
+          height: 20,
+          fontFamily: "Verdana",
+          fontSize: "1.8rem",
+          fontWeight: "bold",
+        }}
       >
         <polygon
           points="50 0, 100 50, 50 100, 0 50"
@@ -75,7 +64,6 @@ export default function StationsMarkerIcon({ maxMeanValue }) {
             strokeWidth: 2,
             fillOpacity: setFillOpacity(maxMeanValue),
           }}
-          //className={classes.triangle}
         />
         {/*<text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">{value}</text>*/}
       </svg>

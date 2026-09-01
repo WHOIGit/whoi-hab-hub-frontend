@@ -1,32 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Button, Grid, CircularProgress } from "@material-ui/core";
+import { Typography, Button, Grid, CircularProgress, Box } from "@mui/material";
 
 import axiosInstance from "../../../app/apiAxios";
 
-const useStyles = makeStyles((theme) => ({
-  placeholder: {
-    textAlign: "center",
-  },
-  rootGrid: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    backgroundColor: theme.palette.background.paper,
-  },
-  imageGrid: {
-    maxWidth: "100%",
-  },
-  gridList: {
-    flexWrap: "nowrap",
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: "translateZ(0)",
-  },
-}));
-
 const IfcbMetaData = ({ metaDataUrl, chartExpanded }) => {
-  const classes = useStyles();
   const [pointImgData, setPointImgData] = useState();
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
@@ -54,7 +31,7 @@ const IfcbMetaData = ({ metaDataUrl, chartExpanded }) => {
   return (
     <div>
       {!pointImgData && (
-        <div className={classes.placeholder}>
+        <div style={{ textAlign: "center" }}>
           <CircularProgress />
         </div>
       )}
@@ -83,19 +60,27 @@ const IfcbMetaData = ({ metaDataUrl, chartExpanded }) => {
               </Grid>
             </Grid>
           </div>
-          <div className={classes.rootGrid}>
+          <Box
+            sx={{
+              marginTop: 2,
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-around",
+              backgroundColor: (theme) => theme.palette.background.paper,
+            }}
+          >
             <Grid container spacing={2}>
               {pointImgData.images.map((image) => (
                 <Grid item xs={gridSize} key={image}>
                   <img
                     src={image}
                     alt={pointImgData.species}
-                    className={classes.imageGrid}
+                    style={{ maxWidth: "100%" }}
                   />
                 </Grid>
               ))}
             </Grid>
-          </div>
+          </Box>
         </div>
       )}
     </div>
