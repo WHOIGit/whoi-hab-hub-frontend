@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Map, { NavigationControl, ScaleControl } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
@@ -79,6 +79,8 @@ export default function HabMap({ bookmarkViewport }) {
   // eslint-disable-next-line no-unused-vars
   const [yAxisScale, setYAxisScale] = useState("linear");
   const [selectedPoint, setSelectedPoint] = useState(null);
+  // New piece of state to track the current map cursor style
+  const [cursorStyle, setCursorStyle] = useState('grab');
   const mapRef = useRef();
   const dispatch = useDispatch();
 
@@ -163,10 +165,9 @@ export default function HabMap({ bookmarkViewport }) {
 
     if (cruiseFeatures.length > 0) {
       const clickedFeature = cruiseFeatures[0];
-      console.log(clickedFeature);
-      const { id, name, desc } = clickedFeature.properties;
       const [lng, lat] = clickedFeature.geometry.coordinates;
-      setSelectedPoint({ id, name, desc, lng, lat });
+      // pass the whole property bag through; CruiseTrackMarkers decides what to show
+      setSelectedPoint({ ...clickedFeature.properties, lng, lat });
     } else {
       setSelectedPoint(null);
     }
@@ -188,6 +189,12 @@ export default function HabMap({ bookmarkViewport }) {
     const payload = { id: feature.id, layerID: layerID, metricID: metricID };
     dispatch(addFeature(payload));
   };
+
+  // Turn the cursor into a pointer as soon as the mouse enters a point feature
+  const onMouseEnter = useCallback(() => setCursorStyle('pointer'), []);
+  
+  // Revert back to standard map grabbing when the mouse leaves a point feature
+  const onMouseLeave = useCallback(() => setCursorStyle('grab'), []);
 
   const onPaneClose = (featureID) => {
     const payload = featureID;
@@ -291,6 +298,10 @@ export default function HabMap({ bookmarkViewport }) {
           //interactiveLayerIds={interactiveLayerIds}
           //preserveDrawingBuffer={true}
           onZoomEnd={handleZoomUpdates}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          // Pass our managed cursor state directly into the Map component 
+          cursor={cursorStyle}
           ref={mapRef}
         >
           <React.Fragment>
