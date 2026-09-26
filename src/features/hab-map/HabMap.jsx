@@ -24,6 +24,7 @@ import {
   setAllFeatures,
 } from "./habMapDataSlice";
 import "maplibre-gl/dist/maplibre-gl.css";
+import CruiseTrackMarkers from "./CruiseTracksMarkers";
 
 const navStyle = {
   position: "absolute",
@@ -77,6 +78,7 @@ export default function HabMap({ bookmarkViewport }) {
   const [gridZoomRange, setGridZoomRange] = useState(initialGridZoomArray);
   // eslint-disable-next-line no-unused-vars
   const [yAxisScale, setYAxisScale] = useState("linear");
+  const [selectedPoint, setSelectedPoint] = useState(null);
   const mapRef = useRef();
   const dispatch = useDispatch();
 
@@ -155,6 +157,19 @@ export default function HabMap({ bookmarkViewport }) {
   const onMapClick = (event) => {
     console.log("MAP CLICK");
     const mapFeatures = mapRef.current.queryRenderedFeatures(event.point);
+    const cruiseFeatures = event.target.queryRenderedFeatures(event.point, {
+      layers: ['waypoints-layer'],
+    });
+
+    if (cruiseFeatures.length > 0) {
+      const clickedFeature = cruiseFeatures[0];
+      console.log(clickedFeature);
+      const { id, name, desc } = clickedFeature.properties;
+      const [lng, lat] = clickedFeature.geometry.coordinates;
+      setSelectedPoint({ id, name, desc, lng, lat });
+    } else {
+      setSelectedPoint(null);
+    }
     const feature = mapFeatures[0];
     if (
       feature !== undefined &&
@@ -223,6 +238,18 @@ export default function HabMap({ bookmarkViewport }) {
           key={layerID}
         />
       );
+    } else if (layerID === DATA_LAYERS.cruiseTracksLayer) {
+      return (
+        <CruiseTrackMarkers
+          onMarkerClick={onMarkerClick}
+          gridLength={getGridZoomLength()}
+          metricID={METRIC_IDS.cellConcentration}
+          layerID={layerID}
+          selectedPoint={selectedPoint}
+          setSelectedPoint={setSelectedPoint}
+          key={layerID}
+        />
+      );
     } else {
       return;
     }
@@ -260,6 +287,7 @@ export default function HabMap({ bookmarkViewport }) {
           reuseMaps={true}
           style={{ height: "100vh", width: "100%" }}
           onClick={(event) => onMapClick(event)}
+          interactiveLayerIds={['waypoints-layer']}
           //interactiveLayerIds={interactiveLayerIds}
           //preserveDrawingBuffer={true}
           onZoomEnd={handleZoomUpdates}

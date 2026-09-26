@@ -104,7 +104,8 @@ export const dataLayersSlice = createSlice({
             element.id === DATA_LAYERS.closuresLayer ||
             element.id === DATA_LAYERS.closuresSeasonalLayer ||
             element.id === DATA_LAYERS.biovolumeLayer ||
-            element.id === DATA_LAYERS.biovolumeSpatialGridLayer
+            element.id === DATA_LAYERS.biovolumeSpatialGridLayer ||
+            element.id === DATA_LAYERS.cruiseTracksLayer
           ) {
             element.visibility = false;
           } else {

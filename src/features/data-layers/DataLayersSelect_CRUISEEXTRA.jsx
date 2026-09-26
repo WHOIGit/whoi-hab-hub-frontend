@@ -21,6 +21,15 @@ import { DATA_LAYERS } from "../../Constants";
 export default function HabSpeciesForm() {
   const dataLayers = useSelector((state) => state.dataLayers.layers);
   const dispatch = useDispatch();
+  console.log(dataLayers)
+  
+  const cruiseTracksDisplay = dataLayers.find(
+    (layer) => layer.id === DATA_LAYERS.cellConcentrationSpatialGridLayer
+  );
+
+  const cruiseTracksLayer = dataLayers.find(
+    (layer) => layer.id === DATA_LAYERS.cruiseTracksLayer
+  );
 
   const handleCheckboxChange = (event, dataLayer) => {
     // only one of cell concentration-layer/biovolume-layer can be active at one time
@@ -174,6 +183,23 @@ export default function HabSpeciesForm() {
       </FormControl>
       </Box>
       
+      {cruiseTracksDisplay && (
+        <Box sx={{ mt: 1 }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={cruiseTracksLayer.visibility}
+                onChange={(event) =>
+                  handleCheckboxChange(event, cruiseTracksLayer)
+                }
+                name={cruiseTracksLayer.name}
+              />
+            }
+            label="Show Cruise Tracks"
+          />
+        </Box>
+      )}
     </Stack>
   );
 }
