@@ -3,12 +3,16 @@ import { useSelector } from "react-redux";
 import { Source, Layer, Popup } from 'react-map-gl';
 import { format, parseISO } from "date-fns";
 import axiosInstance from "../../app/apiAxios";
+import { selectVisibleSpecies } from "../hab-species/habSpeciesSlice";
 
 // Cycled through so each cruise track in the results gets a distinct color
 const TRACK_COLORS = ["#007cbf", "#e6550d", "#31a354", "#756bb1", "#d62728", "#17becf"];
+// Waypoints where none of the visible species were found
+const NO_SPECIES_COLOR = "#cccccc";
 
 export default function CruiseTrackMarkers({ onMarkerClick, metricID, layerID, selectedPoint, setSelectedPoint }) {
   const habSpecies = useSelector((state) => state.habSpecies.species);
+  const visibleSpecies = useSelector(selectVisibleSpecies);
   const dateFilter = useSelector((state) => state.dateFilter);
 
   // eslint-disable-next-line no-unused-vars
@@ -53,10 +57,21 @@ export default function CruiseTrackMarkers({ onMarkerClick, metricID, layerID, s
         cruiseLocation: cruise.location,
       };
 
-      const waypoints = points.map((p) => ({
-        ...p,
-        properties: { ...p.properties, ...cruiseProps, type: 'waypoint', color },
-      }));
+      const waypoints = points.map((p) => {
+        // gray out bins where none of the currently visible species were found
+        const found = p.properties?.speciesFound ?? [];
+        const hasMatch = visibleSpecies.some((s) => found.includes(s.id));
+        return {
+          ...p,
+          properties: {
+            ...p.properties,
+            ...cruiseProps,
+            type: 'waypoint',
+            hasSpecies: hasMatch,
+            color: hasMatch ? color : NO_SPECIES_COLOR,
+          },
+        };
+      });
 
       if (points.length < 2) return waypoints;
 
@@ -73,7 +88,7 @@ export default function CruiseTrackMarkers({ onMarkerClick, metricID, layerID, s
     });
 
     return { type: 'FeatureCollection', features };
-  }, [results]);
+  }, [results, visibleSpecies]);
 
   // 3. Layer styles (GPU rendered), colored per cruise off the feature properties
   const lineStyle = {
@@ -87,6 +102,10 @@ export default function CruiseTrackMarkers({ onMarkerClick, metricID, layerID, s
     id: 'waypoints-layer',
     type: 'circle',
     filter: ['==', ['get', 'type'], 'waypoint'],  // Only draw point features
+    layout: {
+      // higher sort key draws on top, so matched bins aren't hidden under gray ones
+      'circle-sort-key': ['case', ['get', 'hasSpecies'], 1, 0],
+    },
     paint: {
       'circle-radius': 6,
       'circle-color': ['get', 'color'],
@@ -142,16 +161,21 @@ export default function CruiseTrackMarkers({ onMarkerClick, metricID, layerID, s
                 </p>
               )}
               {speciesFound.length > 0 && (
-                <ul style={{ margin: '0 0 4px 0', padding: 0, listStyle: 'none' }}>
-                  {speciesFound.map((species) => (
-                    <li
-                      key={species.id}
-                      style={{ fontSize: '12px', color: species.colorPrimary }}
-                    >
-                      {species.speciesName}
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px' }}>
+                    Species Found:
+                  </p>
+                  <ul style={{ margin: '0 0 4px 0', padding: 0, listStyle: 'none' }}>
+                    {speciesFound.map((species) => (
+                      <li
+                        key={species.id}
+                        style={{ fontSize: '12px', color: species.primaryColor }}
+                      >
+                        <em>{species.displayName}</em>
+                      </li>
+                    ))}
+                  </ul>
+                </>
               )}
               <p style={{ margin: 0, fontSize: '11px', color: '#888' }}>
                 {selectedPoint.pid}
