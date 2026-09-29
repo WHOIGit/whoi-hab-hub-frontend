@@ -128,8 +128,7 @@ export default function CruiseTrackMarkers({ onMarkerClick, metricID, layerID, s
     }
     return habSpecies.filter((species) => ids.includes(species.id));
   }, [selectedPoint, habSpecies]);
-
-
+  
   return (
     <div>
       {geoJsonData && (
