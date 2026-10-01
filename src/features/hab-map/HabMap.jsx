@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Map, { NavigationControl, ScaleControl } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
@@ -24,7 +24,6 @@ import {
   setAllFeatures,
 } from "./habMapDataSlice";
 import "maplibre-gl/dist/maplibre-gl.css";
-import CruiseTrackMarkers from "./CruiseTracksMarkers";
 
 const navStyle = {
   position: "absolute",
@@ -78,9 +77,6 @@ export default function HabMap({ bookmarkViewport }) {
   const [gridZoomRange, setGridZoomRange] = useState(initialGridZoomArray);
   // eslint-disable-next-line no-unused-vars
   const [yAxisScale, setYAxisScale] = useState("linear");
-  const [selectedPoint, setSelectedPoint] = useState(null);
-  // New piece of state to track the current map cursor style
-  const [cursorStyle, setCursorStyle] = useState('grab');
   const mapRef = useRef();
   const dispatch = useDispatch();
 
@@ -159,18 +155,6 @@ export default function HabMap({ bookmarkViewport }) {
   const onMapClick = (event) => {
     console.log("MAP CLICK");
     const mapFeatures = mapRef.current.queryRenderedFeatures(event.point);
-    const cruiseFeatures = event.target.queryRenderedFeatures(event.point, {
-      layers: ['waypoints-layer'],
-    });
-
-    if (cruiseFeatures.length > 0) {
-      const clickedFeature = cruiseFeatures[0];
-      const [lng, lat] = clickedFeature.geometry.coordinates;
-      // pass the whole property bag through; CruiseTrackMarkers decides what to show
-      setSelectedPoint({ ...clickedFeature.properties, lng, lat });
-    } else {
-      setSelectedPoint(null);
-    }
     const feature = mapFeatures[0];
     if (
       feature !== undefined &&
@@ -189,12 +173,6 @@ export default function HabMap({ bookmarkViewport }) {
     const payload = { id: feature.id, layerID: layerID, metricID: metricID };
     dispatch(addFeature(payload));
   };
-
-  // Turn the cursor into a pointer as soon as the mouse enters a point feature
-  const onMouseEnter = useCallback(() => setCursorStyle('pointer'), []);
-  
-  // Revert back to standard map grabbing when the mouse leaves a point feature
-  const onMouseLeave = useCallback(() => setCursorStyle('grab'), []);
 
   const onPaneClose = (featureID) => {
     const payload = featureID;
@@ -245,18 +223,6 @@ export default function HabMap({ bookmarkViewport }) {
           key={layerID}
         />
       );
-    } else if (layerID === DATA_LAYERS.cruiseTracksLayer) {
-      return (
-        <CruiseTrackMarkers
-          onMarkerClick={onMarkerClick}
-          gridLength={getGridZoomLength()}
-          metricID={METRIC_IDS.cellConcentration}
-          layerID={layerID}
-          selectedPoint={selectedPoint}
-          setSelectedPoint={setSelectedPoint}
-          key={layerID}
-        />
-      );
     } else {
       return;
     }
@@ -294,14 +260,9 @@ export default function HabMap({ bookmarkViewport }) {
           reuseMaps={true}
           style={{ height: "100vh", width: "100%" }}
           onClick={(event) => onMapClick(event)}
-          interactiveLayerIds={['waypoints-layer']}
           //interactiveLayerIds={interactiveLayerIds}
           //preserveDrawingBuffer={true}
           onZoomEnd={handleZoomUpdates}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          // Pass our managed cursor state directly into the Map component 
-          cursor={cursorStyle}
           ref={mapRef}
         >
           <React.Fragment>

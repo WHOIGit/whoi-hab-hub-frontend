@@ -39,13 +39,14 @@ export default function SpatialGridMarkers({
           exclude_month_range: dateFilter.excludeMonthRange,
           smoothing_factor: dateFilter.smoothingFactor,
           grid_level: gridLength,
+          //strict_agreement: true,
         });
 
         if (LIMIT_DATA_START_DATE) {
           params.append("limit_start_date", LIMIT_DATA_START_DATE);
         }
 
-        const res = await axiosInstance.get("api/v1/ifcb-spatial-grid/", {
+        const res = await axiosInstance.get("api/v2/ifcb-spatial-grid/", {
           params,
         });
         console.log(res.request.responseURL);

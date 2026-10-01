@@ -48,7 +48,6 @@ export const fetchLayers = createAsyncThunk(
         SHOW_DATALAYERS_LIST.includes(element.id)
       );
       data = newData;
-      console.log(data);
     }
 
     return data;
@@ -104,8 +103,7 @@ export const dataLayersSlice = createSlice({
             element.id === DATA_LAYERS.closuresLayer ||
             element.id === DATA_LAYERS.closuresSeasonalLayer ||
             element.id === DATA_LAYERS.biovolumeLayer ||
-            element.id === DATA_LAYERS.biovolumeSpatialGridLayer ||
-            element.id === DATA_LAYERS.cruiseTracksLayer
+            element.id === DATA_LAYERS.biovolumeSpatialGridLayer
           ) {
             element.visibility = false;
           } else {

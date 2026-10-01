@@ -9,7 +9,6 @@ export const DATA_LAYERS = {
   closuresSeasonalLayer: "closures_seasonal_layer",
   closuresIconsLayer: "closures_layer_icons",
   closuresSeasonalIconsLayer: "closures_seasonal_layer_icons",
-  cruiseTracksLayer: "cruise_tracks_layer",
 };
 
 export const INTERACTIVE_LAYERS = [

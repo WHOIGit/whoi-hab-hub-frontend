@@ -57,7 +57,7 @@ export default function DataPanel({
           dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer ||
           dataLayer === DATA_LAYERS.biovolumeSpatialGridLayer
         ) {
-          endpoint = `api/v1/ifcb-spatial-grid/${featureID}/`;
+          endpoint = `api/v2/ifcb-spatial-grid/${featureID}/`;
           // Match smoothing_factor for Spatial Grid graphs
           // smoothingFactor = 4;
         } else if (
