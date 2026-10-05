@@ -8,6 +8,7 @@ import DataPanel from "./data-panels/DataPanel";
 import StationsMarkers from "./StationsMarkers";
 import SpatialGridMarkers from "./SpatialGridMarkers";
 import ClosuresLayer from "./ClosuresLayer";
+import IfcbBinLocationsLayer from "./IfcbBinLocationsLayer";
 import DisclaimerBox from "./DisclaimerBox";
 import MapLoadingIndicator from "./MapLoadingIndicator";
 import CurrentDateChip from "../date-filter/CurrentDateChip";
@@ -194,6 +195,8 @@ export default function HabMap({ bookmarkViewport }) {
       layerID === DATA_LAYERS.closuresSeasonalLayer
     ) {
       return <ClosuresLayer layerID={layerID} key={layerID} />;
+    } else if (layerID === DATA_LAYERS.ifcbBinLocationsLayer) {
+      return <IfcbBinLocationsLayer layerID={layerID} key={layerID} />;
     } else if (layerID === DATA_LAYERS.cellConcentrationSpatialGridLayer) {
       return (
         <SpatialGridMarkers

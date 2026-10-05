@@ -2,6 +2,7 @@
 export const DATA_LAYERS = {
   biovolumeSpatialGridLayer: "biovolume_spatialgrid_layer",
   cellConcentrationSpatialGridLayer: "cell_concentration_spatialgrid_layer",
+  ifcbBinLocationsLayer: "ifcb_bin_locations_layer",
   stationsLayer: "stations_layer",
   closuresLayer: "closures_layer",
   closuresSeasonalLayer: "closures_seasonal_layer",
@@ -21,6 +22,10 @@ export const DATA_LAYER_DEFINITIONS = [
   {
     id: DATA_LAYERS.cellConcentrationSpatialGridLayer,
     name: "Cell Concentration (Spatial Grid)",
+  },
+  {
+    id: DATA_LAYERS.ifcbBinLocationsLayer,
+    name: "Plankton Image Locations",
   },
   {
     id: DATA_LAYERS.closuresLayer,

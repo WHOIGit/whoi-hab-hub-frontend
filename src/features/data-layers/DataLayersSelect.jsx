@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { changeLayerVisibility } from "./dataLayersSlice";
 import DiamondMarker from "../../images/diamond.svg";
 import TriangleMarker from "../../images/triangle.svg";
+import DotMarker from "../../images/dot-grey.svg";
 // local
 import { DATA_LAYERS } from "../../Constants";
 
@@ -98,6 +99,14 @@ export default function HabSpeciesForm() {
                   <img
                     src={TriangleMarker}
                     alt="Spatial Grid Legend Icon"
+                    style={{ width: "25px" }}
+                  />
+                )}
+
+                {dataLayer.id === DATA_LAYERS.ifcbBinLocationsLayer && (
+                  <img
+                    src={DotMarker}
+                    alt="Plankton Image Locations Legend Icon"
                     style={{ width: "25px" }}
                   />
                 )}

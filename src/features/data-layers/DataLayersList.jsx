@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { DATA_LAYERS } from "../../Constants";
 import DiamondMarker from "../../images/diamond.svg";
 import TriangleMarker from "../../images/triangle.svg";
+import DotMarker from "../../images/dot-grey.svg";
 import ClosureIcon from "../../images/icon-shellfish-closure.png";
 import { selectVisibleLayers } from "./dataLayersSlice";
 
@@ -20,6 +21,8 @@ export default function DataLayersList() {
       dataLayer.id === DATA_LAYERS.biovolumeSpatialGridLayer
     ) {
       imgSrc = TriangleMarker;
+    } else if (dataLayer.id === DATA_LAYERS.ifcbBinLocationsLayer) {
+      imgSrc = DotMarker;
     } else if (
       dataLayer.id === DATA_LAYERS.closuresLayer ||
       dataLayer.id === DATA_LAYERS.closuresSeasonalLayer
