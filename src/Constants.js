@@ -45,6 +45,10 @@ export const ENVIRONMENTS = ["Marine", "Freshwater"];
 // Match available species type options in API Target Species
 export const SPECIES_TYPES = ["HAB", "Other"];
 
+// Match available classifier agreement options in API IFCB Bins
+export const AGREEMENT_OPTIONS = ["all", "majority", "any"];
+export const DEFAULT_AGREEMENT = "majority";
+
 // object of Component "types" to work with react-dnd drag and drop functionality
 export const ITEM_TYPES = {
   PANE: "pane",

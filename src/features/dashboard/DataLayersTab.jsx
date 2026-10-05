@@ -4,6 +4,7 @@ import { Divider, List, ListItem } from "@mui/material";
 
 import DataLayersSelect from "../data-layers/DataLayersSelect";
 import MaxMeanSelect from "../data-layers/MaxMeanSelect";
+import AgreementSelect from "../agreement-filter/AgreementSelect";
 
 export default function DataLayersTab() {
   return (
@@ -14,6 +15,10 @@ export default function DataLayersTab() {
       <Divider variant="middle" component="li" sx={{ mt: 1, mb: 1 }} />
       <ListItem>
         <MaxMeanSelect />
+      </ListItem>
+      <Divider variant="middle" component="li" sx={{ mt: 1, mb: 1 }} />
+      <ListItem>
+        <AgreementSelect />
       </ListItem>
     </List>
   );

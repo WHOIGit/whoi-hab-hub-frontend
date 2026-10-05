@@ -7,6 +7,7 @@ import IfcbSpatialMarkerGrid from "./IfcbSpatialMarkerGrid";
 import { selectMaxMeanOption } from "../data-layers/dataLayersSlice";
 import { selectVisibleSpecies } from "../hab-species/habSpeciesSlice";
 import axiosInstance from "../../app/apiAxios";
+import { selectAgreementOption } from "../agreement-filter/agreementFilterSlice";
 
 let LIMIT_DATA_START_DATE = null;
 // eslint-disable-next-line no-undef
@@ -23,6 +24,7 @@ export default function SpatialGridMarkers({
   const visibleSpecies = useSelector(selectVisibleSpecies);
   const dateFilter = useSelector((state) => state.dateFilter);
   const showMaxMean = useSelector(selectMaxMeanOption);
+  const agreement = useSelector(selectAgreementOption);
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   // eslint-disable-next-line no-unused-vars
@@ -39,7 +41,7 @@ export default function SpatialGridMarkers({
           exclude_month_range: dateFilter.excludeMonthRange,
           smoothing_factor: dateFilter.smoothingFactor,
           grid_level: gridLength,
-          //strict_agreement: true,
+          agreement: agreement,
         });
 
         if (LIMIT_DATA_START_DATE) {
@@ -58,7 +60,7 @@ export default function SpatialGridMarkers({
       }
     }
     fetchResults();
-  }, [dateFilter, gridLength]);
+  }, [dateFilter, gridLength, agreement]);
 
   function renderIconGrid(feature, showMaxMean) {
     // console.log(feature)

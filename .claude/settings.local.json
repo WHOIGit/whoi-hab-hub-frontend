@@ -7,7 +7,8 @@
       "Bash(python3 -)",
       "Bash(npx --no-install eslint src/features/hab-map/IfcbMarkers.jsx src/features/hab-map/IfcbSpatialMarkerGrid.jsx src/features/hab-map/IfcbSpatialMarkers.jsx src/features/hab-map/SpatialGridMarkers.jsx src/features/hab-map/StationsMarkerIcon.jsx src/features/hab-map/StationsMarkers.jsx)",
       "Bash(npm run *)",
-      "Bash(node check.js)"
+      "Bash(node check.js)",
+      "Bash(npx eslint *)"
     ]
   }
 }
