@@ -12,6 +12,7 @@ import HighchartsReact from "highcharts-react-official";
 // Local imports
 import IfcbMetaData from "./IfcbMetaData";
 import { selectVisibleSpecies } from "../../hab-species/habSpeciesSlice";
+import { selectAgreementOption } from "../../agreement-filter/agreementFilterSlice";
 import { DATA_LAYERS } from "../../../Constants";
 // need to add this extra window variable declaration
 // Highcharts has internal references that rely on it being defined on the window
@@ -35,6 +36,7 @@ function IfcbGraph({
   dataLayer,
 }) {
   const habSpecies = useSelector(selectVisibleSpecies);
+  const agreement = useSelector(selectAgreementOption);
   const chartRef = useRef();
   // Local state
   const [chartOptions, setChartOptions] = useState({});
@@ -116,6 +118,7 @@ function IfcbGraph({
                   `${API_URL}api/v2/ifcb-bins/${pointData.binPid}/get_species_images/?` +
                   new URLSearchParams({
                     species: this.series.name,
+                    agreement: agreement,
                   });
                 setMetaDataUrl(url);
                 setOpenMetaData(true);
@@ -157,7 +160,7 @@ function IfcbGraph({
       series: chartData,
     };
     setChartOptions(newChartOptions);
-  }, [visibleResults, metricID, dataLayer]);
+  }, [visibleResults, metricID, dataLayer, agreement]);
 
   useEffect(() => {
     if (chartExpanded) {

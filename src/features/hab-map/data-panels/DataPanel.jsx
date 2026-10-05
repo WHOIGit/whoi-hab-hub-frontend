@@ -7,6 +7,7 @@ import SidePane from "./SidePane";
 import axiosInstance from "../../../app/apiAxios";
 import { DATA_LAYERS } from "../../../Constants";
 import { selectDateFilter } from "../../date-filter/dateFilterSlice";
+import { selectAgreementOption } from "../../agreement-filter/agreementFilterSlice";
 
 let LIMIT_DATA_START_DATE = null;
 // eslint-disable-next-line no-undef
@@ -24,6 +25,7 @@ export default function DataPanel({
 }) {
   //const dateFilter = useSelector((state) => state.dateFilter);
   const dateFilter = useSelector(selectDateFilter);
+  const agreement = useSelector(selectAgreementOption);
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -44,6 +46,8 @@ export default function DataPanel({
       try {
         let endpoint;
         let smoothingFactor = dateFilter.smoothingFactor;
+        // only the v2 IFCB endpoints support the model agreement filter
+        let useAgreement = false;
         if (dataLayer === DATA_LAYERS.stationsLayer) {
           endpoint = `api/v1/stations/${featureID}/`;
           // Force smoothing_factor to be ignored for Station graphs
@@ -58,6 +62,7 @@ export default function DataPanel({
           dataLayer === DATA_LAYERS.biovolumeSpatialGridLayer
         ) {
           endpoint = `api/v2/ifcb-spatial-grid/${featureID}/`;
+          useAgreement = true;
           // Match smoothing_factor for Spatial Grid graphs
           // smoothingFactor = 4;
         } else if (
@@ -80,6 +85,10 @@ export default function DataPanel({
           params.append("limit_start_date", LIMIT_DATA_START_DATE);
         }
 
+        if (useAgreement) {
+          params.append("agreement", agreement);
+        }
+
         const res = await axiosInstance.get(endpoint, {
           params,
         });
@@ -93,7 +102,7 @@ export default function DataPanel({
       }
     }
     fetchResults();
-  }, [featureID, dataLayer, dateFilter, metricID]);
+  }, [featureID, dataLayer, dateFilter, metricID, agreement]);
 
   return (
     <div>
