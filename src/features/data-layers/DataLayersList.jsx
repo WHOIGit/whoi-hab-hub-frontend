@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 import { DATA_LAYERS } from "../../Constants";
 import DiamondMarker from "../../images/diamond.svg";
-import CircleMarker from "../../images/circle.svg";
 import TriangleMarker from "../../images/triangle.svg";
 import ClosureIcon from "../../images/icon-shellfish-closure.png";
 import { selectVisibleLayers } from "./dataLayersSlice";
@@ -16,11 +15,6 @@ export default function DataLayersList() {
     let imgSrc;
     if (dataLayer.id === DATA_LAYERS.stationsLayer) {
       imgSrc = DiamondMarker;
-    } else if (
-      dataLayer.id === DATA_LAYERS.cellConcentrationLayer ||
-      dataLayer.id === DATA_LAYERS.biovolumeLayer
-    ) {
-      imgSrc = CircleMarker;
     } else if (
       dataLayer.id === DATA_LAYERS.cellConcentrationSpatialGridLayer ||
       dataLayer.id === DATA_LAYERS.biovolumeSpatialGridLayer

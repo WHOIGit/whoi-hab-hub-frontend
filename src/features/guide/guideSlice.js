@@ -23,7 +23,7 @@ const guideSteps = [
     stepId: 2,
     label: "Select Data Layers",
     text: `Select Data Layers associated with the selected HAB species/syndromes, 
-    including: IFCB cell concentrations from fixed locations, seasonal shellfish closures, 
+    including: IFCB cell concentrations, seasonal shellfish closures, 
     event triggered shellfish closures, or shellfish toxicity data.<br /><br />
     Select the Data Type shown on the map to display Max or Mean values of the data 
     set during the time range.`,

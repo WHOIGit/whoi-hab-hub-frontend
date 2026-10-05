@@ -71,7 +71,7 @@ export default function GuidePane({
     if (newActiveStep === 4) {
       dispatch(
         changeLayerVisibility({
-          layerID: DATA_LAYERS.cellConcentrationLayer,
+          layerID: DATA_LAYERS.cellConcentrationSpatialGridLayer,
           checked: true,
         })
       );

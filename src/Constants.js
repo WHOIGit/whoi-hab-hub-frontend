@@ -1,8 +1,6 @@
 // Date Layer IDs to match with Redux store
 export const DATA_LAYERS = {
-  biovolumeLayer: "biovolume_layer",
   biovolumeSpatialGridLayer: "biovolume_spatialgrid_layer",
-  cellConcentrationLayer: "cell_concentration_layer",
   cellConcentrationSpatialGridLayer: "cell_concentration_spatialgrid_layer",
   stationsLayer: "stations_layer",
   closuresLayer: "closures_layer",
@@ -10,6 +8,13 @@ export const DATA_LAYERS = {
   closuresIconsLayer: "closures_layer_icons",
   closuresSeasonalIconsLayer: "closures_seasonal_layer_icons",
 };
+
+// Data Layer IDs that are no longer supported in the map. The API still returns
+// these layers, so they get filtered out of the dataLayers Redux state on load.
+export const REMOVED_DATA_LAYERS = [
+  "biovolume_layer",
+  "cell_concentration_layer",
+];
 
 export const INTERACTIVE_LAYERS = [
   DATA_LAYERS.closuresIconsLayer,

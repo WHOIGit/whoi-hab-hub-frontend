@@ -53,11 +53,6 @@ export default function DataPanel({
           // Force smoothing_factor to be ignored for Station graphs
           smoothingFactor = 1;
         } else if (
-          dataLayer === DATA_LAYERS.cellConcentrationLayer ||
-          dataLayer === DATA_LAYERS.biovolumeLayer
-        ) {
-          endpoint = `api/v1/ifcb-datasets/${featureID}/`;
-        } else if (
           dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer ||
           dataLayer === DATA_LAYERS.biovolumeSpatialGridLayer
         ) {

@@ -25,10 +25,7 @@ export default function LegendPane({ dataLayer, left, bottom, id }) {
 
   let title;
 
-  if (
-    dataLayer === DATA_LAYERS.cellConcentrationLayer ||
-    dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer
-  ) {
+  if (dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer) {
     title = "Cell Concentration";
   } else if (dataLayer === DATA_LAYERS.stationsLayer) {
     title = "Shellfish Toxicity";
@@ -79,8 +76,7 @@ export default function LegendPane({ dataLayer, left, bottom, id }) {
       />
 
       <CardContent>
-        {(dataLayer === DATA_LAYERS.cellConcentrationLayer ||
-          dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer) && (
+        {dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer && (
           <LegendCellConcentration />
         )}
 

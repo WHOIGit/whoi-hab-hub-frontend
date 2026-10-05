@@ -2,7 +2,7 @@ import axiosInstance from "../../app/apiAxios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
 // local
-import { DATA_LAYERS } from "../../Constants";
+import { DATA_LAYERS, REMOVED_DATA_LAYERS } from "../../Constants";
 
 let INITIAL_MAX_MEAN = "mean";
 // eslint-disable-next-line no-undef
@@ -20,7 +20,6 @@ if (import.meta.env.VITE_SHOW_DATALAYERS_LIST) {
 // need to check it against the active layers in the API results
 const legendLayerIds = [
   DATA_LAYERS.stationsLayer,
-  DATA_LAYERS.cellConcentrationLayer,
   DATA_LAYERS.cellConcentrationSpatialGridLayer,
 ];
 const interactiveLayerIds = [
@@ -42,7 +41,10 @@ export const fetchLayers = createAsyncThunk(
     const endpoint = "api/v1/core/data-layers/";
     const response = await axiosInstance.get(endpoint);
 
-    let data = response.data;
+    // drop any layers that are no longer supported in the map
+    let data = response.data.filter(
+      (element) => !REMOVED_DATA_LAYERS.includes(element.id)
+    );
     if (SHOW_DATALAYERS_LIST) {
       const newData = data.filter((element) =>
         SHOW_DATALAYERS_LIST.includes(element.id)
@@ -102,7 +104,6 @@ export const dataLayersSlice = createSlice({
           if (
             element.id === DATA_LAYERS.closuresLayer ||
             element.id === DATA_LAYERS.closuresSeasonalLayer ||
-            element.id === DATA_LAYERS.biovolumeLayer ||
             element.id === DATA_LAYERS.biovolumeSpatialGridLayer
           ) {
             element.visibility = false;
@@ -174,25 +175,9 @@ export const selectLayerLegendIds = (state) => {
 export const selectLayerLegendIds = createSelector(
   (state) => state.dataLayers.layers,
   (items) => {
-    let activeLegends = items
+    const activeLegends = items
       .filter((layer) => layer.legendVisibility && layer.visibility)
       .map((layer) => layer.id);
-    // fixed and spatial cell_concentration have same legend pane
-    // only one should show at a single time
-    const checkForFixed = activeLegends.some(
-      (layer) => layer === DATA_LAYERS.cellConcentrationLayer
-    );
-    const checkForSpatial = activeLegends.some(
-      (layer) => layer === DATA_LAYERS.cellConcentrationSpatialGridLayer
-    );
-    console.log(checkForFixed, checkForSpatial, activeLegends);
-
-    if (checkForFixed && checkForSpatial) {
-      //remove one of the legends
-      activeLegends = activeLegends.filter(
-        (layer) => layer !== DATA_LAYERS.cellConcentrationLayer
-      );
-    }
 
     return activeLegends;
   }

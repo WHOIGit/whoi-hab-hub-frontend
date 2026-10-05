@@ -50,8 +50,7 @@ export default function LegendTab() {
       </Box>
       <Divider />
 
-      {(dataLayers.includes(DATA_LAYERS.cellConcentrationLayer) ||
-        dataLayers.includes(DATA_LAYERS.cellConcentrationSpatialGridLayer)) && (
+      {dataLayers.includes(DATA_LAYERS.cellConcentrationSpatialGridLayer) && (
         <>
           <Box sx={legendBoxSx}>
             <Typography variant="subtitle1" display="block" gutterBottom>
@@ -64,7 +63,9 @@ export default function LegendTab() {
               >
                 <IconButton
                   onClick={() =>
-                    handleLegendOpen(DATA_LAYERS.cellConcentrationLayer)
+                    handleLegendOpen(
+                      DATA_LAYERS.cellConcentrationSpatialGridLayer
+                    )
                   }
                   aria-label="open Cell Concentration legend on map"
                 >

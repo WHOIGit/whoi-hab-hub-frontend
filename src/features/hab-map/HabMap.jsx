@@ -6,7 +6,6 @@ import maplibregl from "maplibre-gl";
 // local
 import DataPanel from "./data-panels/DataPanel";
 import StationsMarkers from "./StationsMarkers";
-import IfcbMarkers from "./IfcbMarkers";
 import SpatialGridMarkers from "./SpatialGridMarkers";
 import ClosuresLayer from "./ClosuresLayer";
 import DisclaimerBox from "./DisclaimerBox";
@@ -200,25 +199,6 @@ export default function HabMap({ bookmarkViewport }) {
           onMarkerClick={onMarkerClick}
           gridLength={getGridZoomLength()}
           metricID={METRIC_IDS.cellConcentration}
-          layerID={layerID}
-          key={layerID}
-        />
-      );
-    } else if (layerID === DATA_LAYERS.cellConcentrationLayer) {
-      return (
-        <IfcbMarkers
-          onMarkerClick={onMarkerClick}
-          metricID={METRIC_IDS.cellConcentration}
-          layerID={layerID}
-          onPaneClose={onPaneClose}
-          key={layerID}
-        />
-      );
-    } else if (layerID === DATA_LAYERS.biovolumeLayer) {
-      return (
-        <IfcbMarkers
-          onMarkerClick={onMarkerClick}
-          metricID={METRIC_IDS.biovolume}
           layerID={layerID}
           key={layerID}
         />
