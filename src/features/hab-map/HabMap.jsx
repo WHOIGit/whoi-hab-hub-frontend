@@ -9,6 +9,7 @@ import StationsMarkers from "./StationsMarkers";
 import SpatialGridMarkers from "./SpatialGridMarkers";
 import ClosuresLayer from "./ClosuresLayer";
 import DisclaimerBox from "./DisclaimerBox";
+import MapLoadingIndicator from "./MapLoadingIndicator";
 import CurrentDateChip from "../date-filter/CurrentDateChip";
 import {
   selectInteractiveLayerIds,
@@ -212,6 +213,9 @@ export default function HabMap({ bookmarkViewport }) {
     <div>
       <div>
         <CurrentDateChip />
+      </div>
+      <div>
+        <MapLoadingIndicator />
       </div>
       {features && (
         <div style={dataPanelContainerStyle}>
