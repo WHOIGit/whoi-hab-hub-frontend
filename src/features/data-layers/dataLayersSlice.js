@@ -1,8 +1,7 @@
-import axiosInstance from "../../app/apiAxios";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
 // local
-import { DATA_LAYERS, REMOVED_DATA_LAYERS } from "../../Constants";
+import { DATA_LAYERS, DATA_LAYER_DEFINITIONS } from "../../Constants";
 
 let INITIAL_MAX_MEAN = "mean";
 // eslint-disable-next-line no-undef
@@ -13,11 +12,13 @@ if (import.meta.env.VITE_INITIAL_MAX_MEAN) {
 let SHOW_DATALAYERS_LIST = null;
 // eslint-disable-next-line no-undef
 if (import.meta.env.VITE_SHOW_DATALAYERS_LIST) {
-  SHOW_DATALAYERS_LIST = import.meta.env.VITE_SHOW_DATALAYERS_LIST.split(",");
+  SHOW_DATALAYERS_LIST = import.meta.env.VITE_SHOW_DATALAYERS_LIST.split(",")
+    .map((layerID) => layerID.trim())
+    .filter((layerID) => layerID);
 }
 
 // list of dataLayer IDs that have an available floating Legend window pane
-// need to check it against the active layers in the API results
+// need to check it against the active layers
 const legendLayerIds = [
   DATA_LAYERS.stationsLayer,
   DATA_LAYERS.cellConcentrationSpatialGridLayer,
@@ -27,34 +28,58 @@ const interactiveLayerIds = [
   DATA_LAYERS.closuresSeasonalIconsLayer,
 ];
 
-const initialState = {
-  layers: [],
-  showMaxMean: INITIAL_MAX_MEAN,
-  status: "idle",
-  error: null,
-};
+// layers that start hidden on load. Only one of cell_concentration/biovolume
+// can be active at one time, default to cell_concentration
+const hiddenOnLoadLayerIds = [
+  DATA_LAYERS.closuresLayer,
+  DATA_LAYERS.closuresSeasonalLayer,
+  DATA_LAYERS.biovolumeSpatialGridLayer,
+];
 
-// API request for available dataLayers in HABhub
-export const fetchLayers = createAsyncThunk(
-  "dataLayers/fetchLayers",
-  async () => {
-    const endpoint = "api/v1/core/data-layers/";
-    const response = await axiosInstance.get(endpoint);
-
-    // drop any layers that are no longer supported in the map
-    let data = response.data.filter(
-      (element) => !REMOVED_DATA_LAYERS.includes(element.id)
+// Build the dataLayers the map starts with. The layers available are the ones
+// this client has components for, VITE_SHOW_DATALAYERS_LIST in the local .env
+// picks which of those are active, leave it unset to show all of them.
+function getActiveLayers() {
+  if (SHOW_DATALAYERS_LIST) {
+    const unknownLayerIds = SHOW_DATALAYERS_LIST.filter(
+      (layerID) =>
+        !DATA_LAYER_DEFINITIONS.some((element) => element.id === layerID)
     );
-    if (SHOW_DATALAYERS_LIST) {
-      const newData = data.filter((element) =>
-        SHOW_DATALAYERS_LIST.includes(element.id)
+    if (unknownLayerIds.length) {
+      console.warn(
+        `VITE_SHOW_DATALAYERS_LIST has Data Layer IDs the map cannot render: ${unknownLayerIds.join(
+          ", "
+        )}`
       );
-      data = newData;
     }
-
-    return data;
   }
-);
+
+  const activeLayers = SHOW_DATALAYERS_LIST
+    ? DATA_LAYER_DEFINITIONS.filter((element) =>
+        SHOW_DATALAYERS_LIST.includes(element.id)
+      )
+    : DATA_LAYER_DEFINITIONS;
+
+  return activeLayers.map((element) => {
+    const layer = {
+      ...element,
+      visibility: !hiddenOnLoadLayerIds.includes(element.id),
+    };
+
+    if (legendLayerIds.includes(element.id)) {
+      layer.legendVisibility = true;
+    }
+    if (interactiveLayerIds.includes(element.id)) {
+      layer.interactiveLayer = true;
+    }
+    return layer;
+  });
+}
+
+const initialState = {
+  layers: getActiveLayers(),
+  showMaxMean: INITIAL_MAX_MEAN,
+};
 
 export const dataLayersSlice = createSlice({
   name: "dataLayers",
@@ -87,44 +112,6 @@ export const dataLayersSlice = createSlice({
         }
       });
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchLayers.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchLayers.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        // Add any fetched layers to the array
-        state.layers = state.layers.concat(action.payload);
-        state.layers.forEach((element) => {
-          // hide closures layer by default on load
-          // only one of cell_concentration/biovolume can be active at one time
-          // default to cell_concentration as initial active layer
-          if (
-            element.id === DATA_LAYERS.closuresLayer ||
-            element.id === DATA_LAYERS.closuresSeasonalLayer ||
-            element.id === DATA_LAYERS.biovolumeSpatialGridLayer
-          ) {
-            element.visibility = false;
-          } else {
-            element.visibility = true;
-          }
-
-          // fixed and spatial cell_concentration have same legend pane
-          // only one should show at a single time
-          if (legendLayerIds.includes(element.id)) {
-            element.legendVisibility = true;
-          }
-          if (interactiveLayerIds.includes(element.id)) {
-            element.interactiveLayer = true;
-          }
-        });
-      })
-      .addCase(fetchLayers.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      });
   },
 });
 

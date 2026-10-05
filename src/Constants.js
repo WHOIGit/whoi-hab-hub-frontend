@@ -9,11 +9,31 @@ export const DATA_LAYERS = {
   closuresSeasonalIconsLayer: "closures_seasonal_layer_icons",
 };
 
-// Data Layer IDs that are no longer supported in the map. The API still returns
-// these layers, so they get filtered out of the dataLayers Redux state on load.
-export const REMOVED_DATA_LAYERS = [
-  "biovolume_layer",
-  "cell_concentration_layer",
+// The Data Layers this client can render, in the order they appear in the UI.
+// Every layer needs its own map/legend components here, so this is the full set
+// available. VITE_SHOW_DATALAYERS_LIST in the local .env picks which of them are
+// active for a deployment.
+export const DATA_LAYER_DEFINITIONS = [
+  {
+    id: DATA_LAYERS.biovolumeSpatialGridLayer,
+    name: "Biovolume (Spatial Grid)",
+  },
+  {
+    id: DATA_LAYERS.cellConcentrationSpatialGridLayer,
+    name: "Cell Concentration (Spatial Grid)",
+  },
+  {
+    id: DATA_LAYERS.closuresLayer,
+    name: "Shellfish Bed Closures (Event Triggered)",
+  },
+  {
+    id: DATA_LAYERS.closuresSeasonalLayer,
+    name: "Shellfish Bed Closures (Seasonal)",
+  },
+  {
+    id: DATA_LAYERS.stationsLayer,
+    name: "Shellfish Toxicity",
+  },
 ];
 
 export const INTERACTIVE_LAYERS = [

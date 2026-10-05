@@ -10,10 +10,8 @@ import Gb2006Page from "./routes/gb2026";
 import store from "./app/store";
 import { Provider } from "react-redux";
 import { fetchHabSpecies } from "./features/hab-species/habSpeciesSlice";
-import { fetchLayers } from "./features/data-layers/dataLayersSlice";
 import { fetchBoundingBox } from "./features/hab-map/spatialGridSlice";
 
-store.dispatch(fetchLayers());
 store.dispatch(fetchHabSpecies());
 store.dispatch(fetchBoundingBox());
 

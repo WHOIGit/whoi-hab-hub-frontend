@@ -13,6 +13,7 @@ import HighchartsReact from "highcharts-react-official";
 import IfcbMetaData from "./IfcbMetaData";
 import { selectVisibleSpecies } from "../../hab-species/habSpeciesSlice";
 import { selectAgreementOption } from "../../agreement-filter/agreementFilterSlice";
+import { isSingleLocation } from "./binLocations";
 import { DATA_LAYERS } from "../../../Constants";
 // need to add this extra window variable declaration
 // Highcharts has internal references that rely on it being defined on the window
@@ -48,11 +49,14 @@ function IfcbGraph({
     const chartData = visibleResults.map((item) =>
       handleChartDataFormat(item, metricID)
     );
-    // set chart type based on spatial or fixed Data Layer
+    // set chart type based on spatial or fixed Data Layer. Bins in a grid
+    // square that all sit within a quarter mile of each other come from one
+    // location, so they get a time series line instead of a scatter plot
     let chartType = "spline";
     if (
-      dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer ||
-      dataLayer === DATA_LAYERS.biovolumeSpatialGridLayer
+      (dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer ||
+        dataLayer === DATA_LAYERS.biovolumeSpatialGridLayer) &&
+      !isSingleLocation(visibleResults)
     ) {
       chartType = "scatter";
     }
@@ -198,7 +202,8 @@ function IfcbGraph({
         ).value;
         return [sampleTime, metricValue];
       })
-      .sort();
+      // Highcharts needs the points in ascending time order to draw a line
+      .sort((a, b) => a[0] - b[0]);
 
     const seriesColor = habSpecies.find((item) => item.id === dataObj.species);
 
