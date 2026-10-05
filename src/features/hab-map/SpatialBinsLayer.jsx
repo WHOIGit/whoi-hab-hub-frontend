@@ -47,7 +47,7 @@ export default function SpatialBinsLayer({
 
   useEffect(() => {
     function getFetchUrl() {
-      const baseURL = API_URL + "api/v1/ifcb-bins/";
+      const baseURL = API_URL + "api/v2/ifcb-bins/";
       // build API URL to get set Date Filter
       const filterURL =
         baseURL +
