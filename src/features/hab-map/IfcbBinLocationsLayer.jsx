@@ -1,50 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Source, Layer } from "react-map-gl/maplibre";
-import { format, parseISO } from "date-fns";
-
-import axiosInstance from "../../app/apiAxios";
-
-let LIMIT_DATA_START_DATE = null;
-// eslint-disable-next-line no-undef
-if (import.meta.env.VITE_LIMIT_DATA_START_DATE) {
-  LIMIT_DATA_START_DATE = import.meta.env.VITE_LIMIT_DATA_START_DATE;
-}
+// local
+import { loadBinLocations, selectBinLocations } from "./binLocationsSlice";
 
 export default function IfcbBinLocationsLayer({ layerID }) {
   const dateFilter = useSelector((state) => state.dateFilter);
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
-  // eslint-disable-next-line no-unused-vars
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [results, setResults] = useState();
+  const binLocations = useSelector(selectBinLocations);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    async function fetchResults() {
-      try {
-        const params = new URLSearchParams({
-          start_date: format(parseISO(dateFilter.startDate), "yyyy-MM-dd"),
-          end_date: format(parseISO(dateFilter.endDate), "yyyy-MM-dd"),
-          seasonal: dateFilter.seasonal,
-          exclude_month_range: dateFilter.excludeMonthRange,
-        });
-
-        if (LIMIT_DATA_START_DATE) {
-          params.append("limit_start_date", LIMIT_DATA_START_DATE);
-        }
-
-        const res = await axiosInstance.get("api/v2/ifcb-bin-locations/", {
-          params,
-        });
-        console.log(res.request.responseURL);
-        setIsLoaded(true);
-        setResults(res.data);
-      } catch (error) {
-        setIsLoaded(true);
-        setError(error);
-      }
-    }
-    fetchResults();
+    // the locations are shared with the Spatial Grid highlight, so this only
+    // fetches when they are missing for the current date filter
+    dispatch(loadBinLocations());
   }, [dateFilter]);
 
   // Set default layer styles. These are reference points for where image data
@@ -65,7 +33,7 @@ export default function IfcbBinLocationsLayer({ layerID }) {
     },
   };
 
-  if (!results) {
+  if (!binLocations) {
     return null;
   }
 
@@ -74,7 +42,7 @@ export default function IfcbBinLocationsLayer({ layerID }) {
       id={layerID + "-src"}
       key={layerID + "-src"}
       type="geojson"
-      data={results}
+      data={binLocations}
       buffer={10}
     >
       <Layer {...layerBinLocations} />

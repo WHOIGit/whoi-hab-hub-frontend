@@ -1,7 +1,16 @@
 /* eslint-disable */
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Marker } from "react-map-gl/maplibre";
 import DotMarker from "../../images/dot-grey.svg";
+// local
+import {
+  deleteFeature,
+  selectIsFeatureOpen,
+  setHoveredGridSquare,
+  setSelectedGridSquare,
+  toggleSelectedGridSquare,
+} from "./habMapDataSlice";
 
 export default function IfcbSpatialMarkerGrid({
   feature,
@@ -10,6 +19,37 @@ export default function IfcbSpatialMarkerGrid({
   onMarkerClick,
   metricID,
 }) {
+  const dispatch = useDispatch();
+  const isPanelOpen = useSelector((state) =>
+    selectIsFeatureOpen(state, feature.id)
+  );
+  // the square this marker stands for, used to highlight the Bin locations
+  // inside it on the map
+  const gridSquare = {
+    geohash: feature.id,
+    longitude: feature.geometry.coordinates[0],
+    latitude: feature.geometry.coordinates[1],
+  };
+
+  // highlight the Bin locations while pointing at the marker, clicking keeps
+  // them highlighted after the pointer leaves
+  const highlightHandlers = {
+    onMouseEnter: () => dispatch(setHoveredGridSquare(gridSquare)),
+    onMouseLeave: () => dispatch(setHoveredGridSquare(null)),
+  };
+
+  // the data window and the highlight open and close together, so clicking a
+  // marker that already has a window closes both
+  const handleMarkerClick = (event) => {
+    if (isPanelOpen) {
+      // deleting the feature also clears the highlight it pinned
+      dispatch(deleteFeature(feature.id));
+      return;
+    }
+    dispatch(setSelectedGridSquare(gridSquare));
+    onMarkerClick(event, feature, layerID, metricID);
+  };
+
   // set some constants for square sizes
   const maxSquareSize = 35;
   const minSquareSize = 7;
@@ -110,12 +150,16 @@ export default function IfcbSpatialMarkerGrid({
   if (isNoDetect(speciesValues)) {
     return (
       <Marker
-        key={feature.properties.geohash}
+        key={feature.id}
         latitude={feature.geometry.coordinates[1]}
         longitude={feature.geometry.coordinates[0]}
         captureClick={true}
       >
-        <div style={{ display: "block", width: "20px", height: "20px" }}>
+        <div
+          style={{ display: "block", width: "20px", height: "20px" }}
+          {...highlightHandlers}
+          onClick={() => dispatch(toggleSelectedGridSquare(gridSquare))}
+        >
           <img src={DotMarker} alt="No detection marker" />
         </div>
       </Marker>
@@ -124,14 +168,15 @@ export default function IfcbSpatialMarkerGrid({
 
   return (
     <Marker
-      key={feature.properties.geohash}
+      key={feature.id}
       latitude={feature.geometry.coordinates[1]}
       longitude={feature.geometry.coordinates[0]}
       captureClick={true}
     >
       <div
         style={{ background: "none", border: "none", cursor: "pointer" }}
-        onClick={(event) => onMarkerClick(event, feature, layerID, metricID)}
+        {...highlightHandlers}
+        onClick={(event) => handleMarkerClick(event)}
       >
         <div
           style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}

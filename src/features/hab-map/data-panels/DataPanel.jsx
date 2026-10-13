@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { CircularProgress, Box } from "@mui/material";
+import { CircularProgress, Box, Typography } from "@mui/material";
 import { format, parseISO } from "date-fns";
 // local
 import SidePane from "./SidePane";
@@ -26,7 +26,6 @@ export default function DataPanel({
   //const dateFilter = useSelector((state) => state.dateFilter);
   const dateFilter = useSelector(selectDateFilter);
   const agreement = useSelector(selectAgreementOption);
-  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [results, setResults] = useState();
@@ -34,11 +33,20 @@ export default function DataPanel({
 
   useEffect(() => {
     // Need to check different properties to see whether the API result has data for time frame
-    function hasData(result, dataLayer) {
-      if (dataLayer !== DATA_LAYERS.closuresLayer) {
-        result.properties.maxMeanValues.length
-          ? setHasData(true)
-          : setHasData(false);
+    function checkHasData(result, dataLayer) {
+      if (
+        dataLayer === DATA_LAYERS.closuresLayer ||
+        dataLayer === DATA_LAYERS.closuresSeasonalLayer
+      ) {
+        return;
+      }
+      // the v2 spatial grid detail returns a timeseries per species, the v1
+      // endpoints return maxMeanValues
+      const { timeseriesData, maxMeanValues } = result.properties;
+      if (timeseriesData) {
+        setHasData(timeseriesData.some((item) => item.data?.length));
+      } else {
+        setHasData(Boolean(maxMeanValues?.length));
       }
     }
 
@@ -89,10 +97,14 @@ export default function DataPanel({
         });
         console.log(res.request.responseURL);
         setIsLoaded(true);
+        setError(null);
         setResults(res.data);
-        hasData(res.data, dataLayer);
+        checkHasData(res.data, dataLayer);
       } catch (error) {
         setIsLoaded(true);
+        // drop the previous results so a failed reload can't leave a stale
+        // chart on screen looking like current data
+        setResults(null);
         setError(error);
       }
     }
@@ -116,6 +128,22 @@ export default function DataPanel({
           <Box sx={{ margin: "0 auto" }}>
             <CircularProgress />
           </Box>
+        </Box>
+      )}
+
+      {isLoaded && error && (
+        <Box
+          sx={{
+            margin: 1,
+            width: 600,
+            backgroundColor: "white",
+            padding: 2,
+          }}
+        >
+          <Typography variant="body2" color="error">
+            Could not load this data. Try changing the filters or close and
+            reopen this panel.
+          </Typography>
         </Box>
       )}
 

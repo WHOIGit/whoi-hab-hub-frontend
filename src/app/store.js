@@ -6,6 +6,7 @@ import agreementFilterReducer from "../features/agreement-filter/agreementFilter
 //import spatialGridReducer from "../features/hab-map/spatialGridSlice";
 import guideReducer from "../features/guide/guideSlice";
 import habMapDataReducer from "../features/hab-map/habMapDataSlice";
+import binLocationsReducer from "../features/hab-map/binLocationsSlice";
 
 export default configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export default configureStore({
     //spatialGrid: spatialGridReducer,
     guide: guideReducer,
     habMapData: habMapDataReducer,
+    binLocations: binLocationsReducer,
   },
 });

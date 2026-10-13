@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { format, parseISO } from "date-fns";
 // local imports
 import IfcbSpatialMarkerGrid from "./IfcbSpatialMarkerGrid";
@@ -8,6 +8,8 @@ import { selectMaxMeanOption } from "../data-layers/dataLayersSlice";
 import { selectVisibleSpecies } from "../hab-species/habSpeciesSlice";
 import axiosInstance from "../../app/apiAxios";
 import { selectAgreementOption } from "../agreement-filter/agreementFilterSlice";
+import SpatialGridHighlightLayer from "./SpatialGridHighlightLayer";
+import { loadBinLocations } from "./binLocationsSlice";
 
 let LIMIT_DATA_START_DATE = null;
 // eslint-disable-next-line no-undef
@@ -25,6 +27,7 @@ export default function SpatialGridMarkers({
   const dateFilter = useSelector((state) => state.dateFilter);
   const showMaxMean = useSelector(selectMaxMeanOption);
   const agreement = useSelector(selectAgreementOption);
+  const dispatch = useDispatch();
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   // eslint-disable-next-line no-unused-vars
@@ -61,6 +64,13 @@ export default function SpatialGridMarkers({
     }
     fetchResults();
   }, [dateFilter, gridLength, agreement]);
+
+  useEffect(() => {
+    // the Bin locations behind the grid square highlight. Shared with the
+    // Plankton Image Locations layer, so this only fetches when they are
+    // missing for the current date filter
+    dispatch(loadBinLocations());
+  }, [dateFilter]);
 
   function renderIconGrid(feature, showMaxMean) {
     // console.log(feature)
@@ -111,7 +121,7 @@ export default function SpatialGridMarkers({
           speciesValues={speciesValues}
           onMarkerClick={onMarkerClick}
           metricID={metricID}
-          key={feature.properties.geohash}
+          key={feature.id}
         />
       </div>
     );
@@ -122,6 +132,7 @@ export default function SpatialGridMarkers({
   }
   return (
     <div>
+      <SpatialGridHighlightLayer gridLength={gridLength} />
       {results.features.map((feature) => renderIconGrid(feature, showMaxMean))}
     </div>
   );
