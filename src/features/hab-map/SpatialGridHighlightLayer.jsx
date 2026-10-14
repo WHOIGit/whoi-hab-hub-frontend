@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Source, Layer } from "react-map-gl/maplibre";
 // local
 import { selectBinLocations } from "./binLocationsSlice";
-import { selectActiveGridSquare } from "./habMapDataSlice";
+import { selectActiveGridSquares } from "./habMapDataSlice";
 
 const SOURCE_ID = "grid-highlight-src";
 
@@ -16,37 +16,54 @@ function getGridIndex(value, gridLength) {
 
 export default function SpatialGridHighlightLayer({ gridLength }) {
   const binLocations = useSelector(selectBinLocations);
-  const activeGridSquare = useSelector(selectActiveGridSquare);
+  const activeGridSquares = useSelector(selectActiveGridSquares);
 
   const highlightedLocations = useMemo(() => {
-    if (!binLocations || !activeGridSquare) {
+    if (!binLocations || !activeGridSquares.length) {
       return null;
     }
 
-    const lngIndex = getGridIndex(activeGridSquare.longitude, gridLength);
-    const latIndex = getGridIndex(activeGridSquare.latitude, gridLength);
+    // the color each highlighted cell is drawn in, so a location only has to be
+    // matched once no matter how many squares are highlighted at the same time
+    const cellColors = new Map(
+      activeGridSquares.map((gridSquare) => [
+        `${getGridIndex(gridSquare.longitude, gridLength)}:${getGridIndex(
+          gridSquare.latitude,
+          gridLength
+        )}`,
+        gridSquare.highlightColor,
+      ])
+    );
 
-    const features = binLocations.features.filter((feature) => {
+    const features = [];
+    binLocations.features.forEach((feature) => {
       const [lng, lat] = feature.geometry.coordinates;
-      return (
-        getGridIndex(lng, gridLength) === lngIndex &&
-        getGridIndex(lat, gridLength) === latIndex
+      const highlightColor = cellColors.get(
+        `${getGridIndex(lng, gridLength)}:${getGridIndex(lat, gridLength)}`
       );
+      if (!highlightColor) {
+        return;
+      }
+      // the color travels on the feature so one layer can draw every square
+      features.push({
+        ...feature,
+        properties: { ...feature.properties, highlightColor: highlightColor },
+      });
     });
 
     return { type: "FeatureCollection", features: features };
-  }, [binLocations, activeGridSquare, gridLength]);
+  }, [binLocations, activeGridSquares, gridLength]);
 
-  // Set default layer styles. Light yellow stands out against the light grey
-  // Plankton Image Locations points, with a dark outline to keep the dots
-  // readable against the pale basemap
+  // Set default layer styles. Each open square has its own shade of yellow to
+  // orange, outlined to keep the dots readable against the pale basemap and
+  // apart from the grey Plankton Image Locations points
   const layerHighlight = {
     id: "grid-highlight-layer",
     type: "circle",
     source: SOURCE_ID,
     paint: {
       "circle-radius": 5,
-      "circle-color": "#fff176",
+      "circle-color": ["get", "highlightColor"],
       "circle-opacity": 1,
       "circle-stroke-width": 1.5,
       "circle-stroke-color": "#827e7e",

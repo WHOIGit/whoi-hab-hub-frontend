@@ -8,7 +8,7 @@ import {
   deleteFeature,
   selectIsFeatureOpen,
   setHoveredGridSquare,
-  setSelectedGridSquare,
+  addSelectedGridSquare,
   toggleSelectedGridSquare,
 } from "./habMapDataSlice";
 
@@ -46,7 +46,7 @@ export default function IfcbSpatialMarkerGrid({
       dispatch(deleteFeature(feature.id));
       return;
     }
-    dispatch(setSelectedGridSquare(gridSquare));
+    dispatch(addSelectedGridSquare(gridSquare));
     onMarkerClick(event, feature, layerID, metricID);
   };
 

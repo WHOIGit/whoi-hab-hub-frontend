@@ -10,10 +10,10 @@ import Gb2006Page from "./routes/gb2026";
 import store from "./app/store";
 import { Provider } from "react-redux";
 import { fetchHabSpecies } from "./features/hab-species/habSpeciesSlice";
-import { fetchBoundingBox } from "./features/hab-map/spatialGridSlice";
+//import { fetchBoundingBox } from "./features/hab-map/spatialGridSlice";
 
 store.dispatch(fetchHabSpecies());
-store.dispatch(fetchBoundingBox());
+//store.dispatch(fetchBoundingBox());
 
 // Google Analytics setup
 let GA_UID = null;

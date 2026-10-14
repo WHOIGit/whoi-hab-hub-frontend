@@ -7,9 +7,20 @@ import StationsGraph from "./StationsGraph";
 import IfcbGraph from "./IfcbGraph";
 import ClosuresList from "./ClosuresList";
 import { selectVisibleSpecies } from "../../hab-species/habSpeciesSlice";
+import { selectGridSquareHighlightColor } from "../habMapDataSlice";
 import { DATA_LAYERS, METRIC_IDS } from "../../../Constants";
 
 const expandWidth = window.outerWidth - 420;
+
+// readable text for a banner, the highlight shades run from light yellow to
+// deep orange so the darker ones need light text
+function getBannerTextColor(backgroundColor) {
+  const [red, green, blue] = [1, 3, 5].map((index) =>
+    parseInt(backgroundColor.slice(index, index + 2), 16)
+  );
+  const luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
+  return luminance > 0.6 ? "#212121" : "white";
+}
 
 const rootSx = {
   margin: 1,
@@ -41,6 +52,11 @@ export default function SidePane({
   metricID,
 }) {
   const habSpecies = useSelector(selectVisibleSpecies);
+  // Spatial Grid windows are banded in the shade their points are highlighted
+  // in on the map, the other data layers have no highlight
+  const highlightColor = useSelector((state) =>
+    selectGridSquareHighlightColor(state, featureID)
+  );
   const [expandPane, setExpandPane] = useState(false);
   const [visibleResults, setVisibleResults] = useState([]);
 
@@ -98,25 +114,47 @@ export default function SidePane({
     `;
   }
 
+  // band the header in the highlight shade, falling back to the plain header
+  const bannerSx = highlightColor
+    ? { backgroundColor: highlightColor }
+    : undefined;
+  const bannerTextColor = highlightColor
+    ? getBannerTextColor(highlightColor)
+    : (theme) => theme.palette.primary.main;
+  const bannerControlSx = highlightColor
+    ? { color: bannerTextColor }
+    : undefined;
+
   return (
     <Card sx={[rootSx, expandPane && expandSx]}>
       <CardHeader
         slotProps={{
+          root: {
+            sx: bannerSx,
+          },
           title: {
             sx: {
-              color: (theme) => theme.palette.primary.main,
+              color: bannerTextColor,
               fontSize: "1.2rem",
             },
+          },
+          subheader: {
+            sx: bannerControlSx,
           },
         }}
         action={
           <React.Fragment>
-            <IconButton onClick={() => onExpandPanel()} aria-label="expand">
+            <IconButton
+              onClick={() => onExpandPanel()}
+              aria-label="expand"
+              sx={bannerControlSx}
+            >
               {expandPane ? <Minimize /> : <OpenWith />}
             </IconButton>
             <IconButton
               onClick={() => onPaneClose(featureID)}
               aria-label="close"
+              sx={bannerControlSx}
             >
               <Close />
             </IconButton>

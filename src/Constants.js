@@ -75,6 +75,17 @@ export const ENVIRONMENTS = ["Marine", "Freshwater"];
 // Match available species type options in API Target Species
 export const SPECIES_TYPES = ["HAB", "Other"];
 
+// Shades used to tell apart the highlighted Bin locations of each Spatial Grid
+// square that is open at the same time. Light yellow through to deep orange,
+// all readable against the basemap with a dark outline
+export const GRID_HIGHLIGHT_COLORS = [
+  "#fff176",
+  "#ffd54f",
+  "#ffb300",
+  "#fb8c00",
+  "#e65100",
+];
+
 // Match available classifier agreement options in API IFCB Bins
 export const AGREEMENT_OPTIONS = ["all", "majority", "any"];
 export const DEFAULT_AGREEMENT = "majority";
