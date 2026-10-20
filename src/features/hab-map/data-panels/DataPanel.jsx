@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { CircularProgress, Box, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Box,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
 import { format, parseISO } from "date-fns";
 // local
 import SidePane from "./SidePane";
@@ -138,12 +144,21 @@ export default function DataPanel({
             width: 600,
             backgroundColor: "white",
             padding: 2,
+            display: "flex",
+            alignItems: "flex-start",
           }}
         >
-          <Typography variant="body2" color="error">
-            Could not load this data. Try changing the filters or close and
-            reopen this panel.
+          <Typography variant="body2" color="error" sx={{ flexGrow: 1 }}>
+            Could not load this data. Try changing the filters or close this
+            panel.
           </Typography>
+          <IconButton
+            onClick={() => onPaneClose(featureID)}
+            aria-label="close"
+            size="small"
+          >
+            <Close fontSize="small" />
+          </IconButton>
         </Box>
       )}
 
