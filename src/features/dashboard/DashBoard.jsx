@@ -106,6 +106,20 @@ export default function Dashboard({
     setTabValue(newTabValue);
   };
 
+  // MUI only fires the Tabs onChange when the value actually changes, so
+  // collapsing the panel by clicking the tab that is already open has to be
+  // handled on the Tab itself
+  const handleTabClick = (clickedTabValue) => {
+    if (clickedTabValue === tabValue) {
+      setShowControls(!showControls);
+    }
+  };
+
+  const tabProps = (index) => ({
+    sx: tabSx,
+    onClick: () => handleTabClick(index),
+  });
+
   useEffect(() => {
     if (activeGuideStep && activeGuideStep?.tabIndex !== null) {
       setTabValue(activeGuideStep?.tabIndex);
@@ -138,7 +152,7 @@ export default function Dashboard({
                   className={
                     activeGuideStep?.tabIndex === 0 ? styles.pulse : undefined
                   }
-                  sx={tabSx}
+                  {...tabProps(0)}
                 />
                 <Tab
                   icon={<Layers />}
@@ -146,13 +160,13 @@ export default function Dashboard({
                   className={
                     activeGuideStep?.tabIndex === 1 ? styles.pulse : undefined
                   }
-                  sx={tabSx}
+                  {...tabProps(1)}
                 />
-                <Tab icon={<List />} label="Legend" sx={tabSx} />
-                <Tab icon={<Bookmark />} label="Save Map" sx={tabSx} />
-                <Tab icon={<Explore />} label="Links" sx={tabSx} />
-                <Tab icon={<Stars />} label="Partners" sx={tabSx} />
-                <Tab icon={<Help />} label="Guide" sx={tabSx} />
+                <Tab icon={<List />} label="Legend" {...tabProps(2)} />
+                <Tab icon={<Bookmark />} label="Save Map" {...tabProps(3)} />
+                <Tab icon={<Explore />} label="Links" {...tabProps(4)} />
+                <Tab icon={<Stars />} label="Partners" {...tabProps(5)} />
+                <Tab icon={<Help />} label="Guide" {...tabProps(6)} />
               </Tabs>
             </Box>
 
