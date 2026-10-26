@@ -86,8 +86,9 @@ export const GRID_HIGHLIGHT_COLORS = [
   "#e65100",
 ];
 
-// Match available classifier agreement options in API IFCB Bins
-export const AGREEMENT_OPTIONS = ["all", "majority", "any"];
+// Match available classifier agreement options in API IFCB Bins, ordered
+// loosest to strictest for the radio buttons
+export const AGREEMENT_OPTIONS = ["any", "majority", "strict"];
 export const DEFAULT_AGREEMENT = "majority";
 
 // object of Component "types" to work with react-dnd drag and drop functionality

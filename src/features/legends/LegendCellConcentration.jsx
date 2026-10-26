@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import DotMarker from "../../images/dot-grey.svg";
+import NoDetectMarker from "../../images/x-grey.svg";
 
 const LegendGrid = styled(Grid)({
   fontSize: ".8em",
@@ -46,7 +46,7 @@ export default function LegendCellConcentration() {
             <div
               style={{ display: "block", width: "20px", height: "20px" }}
             >
-              <img src={DotMarker} alt="No detection marker" />
+              <img src={NoDetectMarker} alt="No detection marker" />
             </div>
           </Typography>
         </Grid>

@@ -14,7 +14,7 @@ import { changeAgreement, selectAgreementOption } from "./agreementFilterSlice";
 
 // capitalized labels for the API agreement option values
 const AGREEMENT_LABELS = {
-  all: "All",
+  strict: "Strict",
   majority: "Majority",
   any: "Any",
 };

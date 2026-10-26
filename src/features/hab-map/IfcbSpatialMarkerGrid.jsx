@@ -2,14 +2,13 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Marker } from "react-map-gl/maplibre";
-import DotMarker from "../../images/dot-grey.svg";
+import NoDetectMarker from "../../images/x-grey.svg";
 // local
 import {
   deleteFeature,
   selectIsFeatureOpen,
   setHoveredGridSquare,
   addSelectedGridSquare,
-  toggleSelectedGridSquare,
 } from "./habMapDataSlice";
 
 export default function IfcbSpatialMarkerGrid({
@@ -156,11 +155,16 @@ export default function IfcbSpatialMarkerGrid({
         captureClick={true}
       >
         <div
-          style={{ display: "block", width: "20px", height: "20px" }}
+          style={{
+            display: "block",
+            width: "20px",
+            height: "20px",
+            cursor: "pointer",
+          }}
           {...highlightHandlers}
-          onClick={() => dispatch(toggleSelectedGridSquare(gridSquare))}
+          onClick={(event) => handleMarkerClick(event)}
         >
-          <img src={DotMarker} alt="No detection marker" />
+          <img src={NoDetectMarker} alt="No detection marker" />
         </div>
       </Marker>
     );
