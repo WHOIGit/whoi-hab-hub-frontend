@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Popover from "@mui/material/Popover";
 import Box from "@mui/material/Box";
-import { HexColorPicker } from "react-colorful";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 import { PALETTE } from "../../Constants";
 
 export default function SpeciesColorSwatch({ value, onChange }) {
@@ -36,6 +36,7 @@ export default function SpeciesColorSwatch({ value, onChange }) {
       >
         <Box sx={{ p: 1.5 }}>
           <HexColorPicker color={value} onChange={onChange} />
+          <HexColorInput color={value} onChange={onChange} />
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 1, maxWidth: 200 }}>
             {Object.entries(PALETTE).map(([name, color]) => (
               <Box
