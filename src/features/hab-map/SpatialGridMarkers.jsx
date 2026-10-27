@@ -79,35 +79,39 @@ export default function SpatialGridMarkers({
       return null;
     }
 
-    const speciesValues = visibleSpecies.map((item) => {
-      const speciesItem = feature.properties.maxMeanValues.find(
-        (data) => item.id === data.species
-      );
+    const speciesValues = visibleSpecies
+      .map((item) => {
+        const speciesItem = feature.properties.maxMeanValues.find(
+          (data) => item.id === data.species
+        );
 
-      if (!speciesItem) {
-        return [];
-      }
+        if (!speciesItem) {
+          return null;
+        }
 
-      const maxMeanItem = speciesItem.data.find(
-        (data) => data.metricId === metricID
-      );
+        const maxMeanItem = speciesItem.data.find(
+          (data) => data.metricId === metricID
+        );
 
-      if (!maxMeanItem) {
-        return [];
-      }
+        if (!maxMeanItem) {
+          return null;
+        }
 
-      let value = maxMeanItem?.maxValue;
+        let value = maxMeanItem?.maxValue;
 
-      if (showMaxMean === "mean") {
-        value = maxMeanItem?.meanValue;
-      }
+        if (showMaxMean === "mean") {
+          value = maxMeanItem?.meanValue;
+        }
 
-      return {
-        species: item.id,
-        value: value,
-        color: item.primaryColor,
-      };
-    });
+        return {
+          species: item.id,
+          value: value,
+          color: item.primaryColor,
+        };
+      })
+      // a species with no data for this square has no value or color to draw
+      // with, dropping it keeps it from rendering as an untinted black square
+      .filter((item) => item);
     //.sort((a, b) => (a.value < b.value ? 1 : -1));
     if (!speciesValues.length) {
       return null;

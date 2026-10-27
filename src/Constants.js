@@ -72,8 +72,15 @@ export const PALETTE = {
 // Match available species environment options in API Target Species
 export const ENVIRONMENTS = ["Marine", "Freshwater"];
 
-// Match available species type options in API Target Species
+// Match available species type options in API Target Species, in the order the
+// species select list groups them
 export const SPECIES_TYPES = ["HAB", "Other"];
+
+// Headings for each species type group in the species select list
+export const SPECIES_TYPE_LABELS = {
+  HAB: "HAB Species",
+  Other: "Other Species",
+};
 
 // Shades used to tell apart the highlighted Bin locations of each Spatial Grid
 // square that is open at the same time. Light yellow through to deep orange,

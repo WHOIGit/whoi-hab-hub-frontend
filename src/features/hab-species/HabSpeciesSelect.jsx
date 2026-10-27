@@ -36,13 +36,11 @@ export default function HabSpeciesSelect() {
         sx={{ width: "100%", mt: 2 }}
       >
         {habTypes.map((item) => (
-          <>
-            <HabSpeciesSelectByType
-              key={item}
-              species_type={item}
-              limitReached={limitReached}
-            />
-          </>
+          <HabSpeciesSelectByType
+            key={item}
+            species_type={item}
+            limitReached={limitReached}
+          />
         ))}
       </FormControl>
     </div>

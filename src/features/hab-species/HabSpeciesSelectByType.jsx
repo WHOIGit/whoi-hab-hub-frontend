@@ -15,6 +15,7 @@ import {
 } from "./habSpeciesSlice";
 import SpeciesColorSwatch from "./SpeciesColorSwatch";
 import HabSpeciesNameDisplay from "./HabSpeciesNameDisplay";
+import { SPECIES_TYPE_LABELS } from "../../Constants";
 
 export default function HabSpeciesSelectByType({ species_type, limitReached }) {
   const dispatch = useDispatch();
@@ -37,7 +38,9 @@ export default function HabSpeciesSelectByType({ species_type, limitReached }) {
   }
   return (
     <>
-      <FormLabel component="legend">{species_type}</FormLabel>
+      <FormLabel component="legend">
+        {SPECIES_TYPE_LABELS[species_type] || species_type}
+      </FormLabel>
       <FormGroup sx={{ overflowY: "scroll", mb: 2 }}>
         {speciesList.map((species) => {
           return (
