@@ -6,6 +6,7 @@ import { format, parseISO } from "date-fns";
 import IfcbSpatialMarkerGrid from "./IfcbSpatialMarkerGrid";
 import { selectMaxMeanOption } from "../data-layers/dataLayersSlice";
 import { selectVisibleSpecies } from "../hab-species/habSpeciesSlice";
+import useSpeciesFilterRequest from "../hab-species/useSpeciesFilterRequest";
 import axiosInstance from "../../app/apiAxios";
 import { selectAgreementOption } from "../agreement-filter/agreementFilterSlice";
 import SpatialGridHighlightLayer from "./SpatialGridHighlightLayer";
@@ -28,6 +29,10 @@ export default function SpatialGridMarkers({
   const showMaxMean = useSelector(selectMaxMeanOption);
   const agreement = useSelector(selectAgreementOption);
   const dispatch = useDispatch();
+  // every request option other than the species, so a change to any of them
+  // fetches again even when the species selection is unchanged
+  const filterKey = JSON.stringify({ dateFilter, gridLength, agreement });
+  const { speciesParam, claimFetch } = useSpeciesFilterRequest(filterKey);
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   // eslint-disable-next-line no-unused-vars
@@ -45,6 +50,8 @@ export default function SpatialGridMarkers({
           smoothing_factor: dateFilter.smoothingFactor,
           grid_level: gridLength,
           agreement: agreement,
+          // only ask for the species that are selected
+          species: speciesParam,
         });
 
         if (LIMIT_DATA_START_DATE) {
@@ -62,8 +69,16 @@ export default function SpatialGridMarkers({
         setError(error);
       }
     }
+    // nothing is selected, so there is nothing to draw and nothing to request
+    if (!speciesParam) {
+      return;
+    }
+    // a species was only cleared, the loaded data already covers the rest
+    if (!claimFetch()) {
+      return;
+    }
     fetchResults();
-  }, [dateFilter, gridLength, agreement]);
+  }, [filterKey, speciesParam]);
 
   useEffect(() => {
     // the Bin locations behind the grid square highlight. Shared with the

@@ -14,6 +14,7 @@ import axiosInstance from "../../../app/apiAxios";
 import { DATA_LAYERS } from "../../../Constants";
 import { selectDateFilter } from "../../date-filter/dateFilterSlice";
 import { selectAgreementOption } from "../../agreement-filter/agreementFilterSlice";
+import useSpeciesFilterRequest from "../../hab-species/useSpeciesFilterRequest";
 
 let LIMIT_DATA_START_DATE = null;
 // eslint-disable-next-line no-undef
@@ -32,6 +33,18 @@ export default function DataPanel({
   //const dateFilter = useSelector((state) => state.dateFilter);
   const dateFilter = useSelector(selectDateFilter);
   const agreement = useSelector(selectAgreementOption);
+  // only the v2 spatial grid endpoint takes the agreement and species filters
+  const isSpatialGrid =
+    dataLayer === DATA_LAYERS.cellConcentrationSpatialGridLayer ||
+    dataLayer === DATA_LAYERS.biovolumeSpatialGridLayer;
+  const filterKey = JSON.stringify({
+    featureID,
+    dataLayer,
+    dateFilter,
+    metricID,
+    agreement,
+  });
+  const { speciesParam, claimFetch } = useSpeciesFilterRequest(filterKey);
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [results, setResults] = useState();
@@ -60,8 +73,6 @@ export default function DataPanel({
       try {
         let endpoint;
         let smoothingFactor = dateFilter.smoothingFactor;
-        // only the v2 IFCB endpoints support the model agreement filter
-        let useAgreement = false;
         if (dataLayer === DATA_LAYERS.stationsLayer) {
           endpoint = `api/v1/stations/${featureID}/`;
           // Force smoothing_factor to be ignored for Station graphs
@@ -71,7 +82,6 @@ export default function DataPanel({
           dataLayer === DATA_LAYERS.biovolumeSpatialGridLayer
         ) {
           endpoint = `api/v2/ifcb-spatial-grid/${featureID}/`;
-          useAgreement = true;
           // Match smoothing_factor for Spatial Grid graphs
           // smoothingFactor = 4;
         } else if (
@@ -94,8 +104,10 @@ export default function DataPanel({
           params.append("limit_start_date", LIMIT_DATA_START_DATE);
         }
 
-        if (useAgreement) {
+        if (isSpatialGrid) {
           params.append("agreement", agreement);
+          // only ask for the species that are selected
+          params.append("species", speciesParam);
         }
 
         const res = await axiosInstance.get(endpoint, {
@@ -114,8 +126,13 @@ export default function DataPanel({
         setError(error);
       }
     }
+    // the chart only plots the selected species, so clearing one needs no new
+    // data. The other data layers do not take a species filter
+    if (isSpatialGrid && !claimFetch()) {
+      return;
+    }
     fetchResults();
-  }, [featureID, dataLayer, dateFilter, metricID, agreement]);
+  }, [filterKey, isSpatialGrid ? speciesParam : null]);
 
   return (
     <div>

@@ -194,6 +194,17 @@ export const selectVisibleSpecies = createSelector(
   (items) => items.filter((item) => item.visibility)
 );
 
+// return the ids of the selected species, sorted so the value is stable to
+// compare and to send as an API filter
+export const selectVisibleSpeciesIds = createSelector(
+  (state) => state.habSpecies.species,
+  (items) =>
+    items
+      .filter((item) => item.visibility)
+      .map((item) => item.id)
+      .sort()
+);
+
 // get species by syndrome
 export const selectSpeciesBySyndrome = (state, syndrome) =>
   state.habSpecies.species.filter((item) => item.syndrome === syndrome);
