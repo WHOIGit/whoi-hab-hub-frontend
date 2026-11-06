@@ -1,85 +1,103 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
-import {
-  FormLabel,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-} from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  changeSpeciesVisibility,
-  changeSpeciesColor,
-  selectSpeciesByType,
-} from "./habSpeciesSlice";
-import SpeciesColorSwatch from "./SpeciesColorSwatch";
-import HabSpeciesNameDisplay from "./HabSpeciesNameDisplay";
-import { SPECIES_TYPE_LABELS } from "../../Constants";
+import React, { useState } from "react";
+import { FormLabel, Collapse, Typography } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+// local
+import { selectSpeciesByType } from "./habSpeciesSlice";
+import HabSpeciesCheckboxList from "./HabSpeciesCheckboxList";
+import { SPECIES_SUBTYPES, SPECIES_TYPE_LABELS } from "../../Constants";
 
 export default function HabSpeciesSelectByType({ species_type, limitReached }) {
-  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+
+  const toggleOpen = () => setOpen(!open);
+
+  // the heading is a FormLabel so it matches the other headings, so it needs
+  // the keyboard handling a button would have given it
+  const handleHeadingKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleOpen();
+    }
+  };
 
   const speciesList = useSelector((state) =>
     selectSpeciesByType(state, species_type)
   );
 
-  const handleSpeciesSelect = (event, species) => {
-    dispatch(
-      changeSpeciesVisibility({
-        checked: event.target.checked,
-        species: species,
-      })
-    );
-  };
-
   if (!speciesList.length) {
     return null;
   }
+
+  const typeLabel = SPECIES_TYPE_LABELS[species_type] || species_type;
+
+  // Only "Other" species carry a subtype. Those are grouped into sub lists in
+  // a collapsible section, so the long list stays out of the way until asked
+  // for. Any other species type is a plain list
+  const hasSubtypes = speciesList.some((species) => species.speciesSubtype);
+
+  if (!hasSubtypes) {
+    return (
+      <>
+        <FormLabel component="legend">{typeLabel}</FormLabel>
+        <HabSpeciesCheckboxList
+          speciesList={speciesList}
+          limitReached={limitReached}
+        />
+      </>
+    );
+  }
+
+  // group by subtype in the order they are listed in Constants, dropping any
+  // subtype that has no species
+  const subtypeGroups = SPECIES_SUBTYPES.map((subtype) => ({
+    subtype: subtype,
+    speciesList: speciesList.filter(
+      (species) => species.speciesSubtype === subtype
+    ),
+  })).filter((group) => group.speciesList.length);
+
   return (
     <>
-      <FormLabel component="legend">
-        {SPECIES_TYPE_LABELS[species_type] || species_type}
+      <FormLabel
+        component="legend"
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        onClick={toggleOpen}
+        onKeyDown={handleHeadingKeyDown}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.5,
+          cursor: "pointer",
+        }}
+      >
+        {typeLabel}
+        {open ? (
+          <ExpandLess fontSize="small" />
+        ) : (
+          <ExpandMore fontSize="small" />
+        )}
       </FormLabel>
-      <FormGroup sx={{ overflowY: "scroll", mb: 2 }}>
-        {speciesList.map((species) => {
-          return (
-            <FormControlLabel
-              key={species.id}
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={species.visibility}
-                  onChange={(event) => handleSpeciesSelect(event, species)}
-                  name={species.speciesName}
-                  disabled={limitReached && !species.visibility}
-                />
-              }
-              label={
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  component="span"
-                >
-                  {" "}
-                  <SpeciesColorSwatch
-                    value={species.primaryColor}
-                    onChange={(hex) =>
-                      dispatch(
-                        changeSpeciesColor({
-                          primaryColor: hex,
-                          species: species,
-                        })
-                      )
-                    }
-                  />
-                  <HabSpeciesNameDisplay species={species} />
-                </Typography>
-              }
+
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        {subtypeGroups.map((group) => (
+          <React.Fragment key={group.subtype}>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ mt: 1, fontStyle: "italic" }}
+            >
+              {group.subtype}
+            </Typography>
+            <HabSpeciesCheckboxList
+              speciesList={group.speciesList}
+              limitReached={limitReached}
             />
-          );
-        })}
-      </FormGroup>
+          </React.Fragment>
+        ))}
+      </Collapse>
     </>
   );
 }

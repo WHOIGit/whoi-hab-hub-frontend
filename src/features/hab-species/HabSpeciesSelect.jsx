@@ -30,7 +30,6 @@ export default function HabSpeciesSelect() {
       </Typography>
 
       <FormControl
-        required
         error={error}
         component="fieldset"
         sx={{ width: "100%", mt: 2 }}

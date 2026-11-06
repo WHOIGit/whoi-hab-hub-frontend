@@ -76,6 +76,15 @@ export const ENVIRONMENTS = ["Marine", "Freshwater"];
 // species select list groups them
 export const SPECIES_TYPES = ["HAB", "Other"];
 
+// Match available species subtype options in API Target Species. Only "Other"
+// species have a subtype, listed here in the order the select list groups them
+export const SPECIES_SUBTYPES = [
+  "Diatoms",
+  "Dinoflagellates",
+  "Ciliates",
+  "Other",
+];
+
 // Headings for each species type group in the species select list
 export const SPECIES_TYPE_LABELS = {
   HAB: "HAB Species",

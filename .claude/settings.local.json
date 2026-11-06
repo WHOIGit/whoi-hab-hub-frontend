@@ -10,7 +10,9 @@
       "Bash(node check.js)",
       "Bash(npx eslint *)",
       "Read(//Users/ethanandrews/Projects/habhub/whoi-hab-hub/habhub-dataserver/habhub/ifcb_datasets/**)",
-      "Bash(awk 'NR>=770 && NR<=845' api2/views.py)"
+      "Bash(awk 'NR>=770 && NR<=845' api2/views.py)",
+      "Bash(cd /Users/ethanandrews/Projects/habhub/whoi-hab-hub && sed -n '33,50p' habhub-dataserver/habhub/core/models.py)",
+      "Read(//Users/ethanandrews/Projects/habhub/whoi-hab-hub/**)"
     ]
   }
 }
