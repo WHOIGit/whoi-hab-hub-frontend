@@ -59,12 +59,14 @@ export default function DataPanel({
       ) {
         return;
       }
-      // the v2 spatial grid detail returns a timeseries per species, the v1
-      // endpoints return maxMeanValues
       const { timeseriesData, maxMeanValues } = result.properties;
-      if (timeseriesData) {
-        setHasData(timeseriesData.some((item) => item.data?.length));
+      if (isSpatialGrid) {
+        // the v2 spatial grid detail returns a timeseries per species
+        setHasData(Boolean(timeseriesData?.some((item) => item.data?.length)));
       } else {
+        // the v1 endpoints summarise the time frame in maxMeanValues. They
+        // also return a timeseriesData, but of flat { date, measurement }
+        // points that say nothing about whether the species has data
         setHasData(Boolean(maxMeanValues?.length));
       }
     }
